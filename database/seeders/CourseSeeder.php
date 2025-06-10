@@ -13,11 +13,11 @@ class CourseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\Course::insert([
-            ['name' => 'Calistung', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Elementary School', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Middle School', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'High School', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'UTBK Intensive', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Calistung', 'required_level' => 'Pra-Sekolah', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Sekolah Dasar', 'required_level' => 'SD', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Sekolah Menengah Pertama', 'required_level' => 'SMP', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Sekolah Menengah Atas', 'required_level' => 'SMA', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'UTBK Intensive', 'required_level' => 'Lulus/Umum', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

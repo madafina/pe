@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('parent_phone_number');
+            $table->enum('education_level', ['Pra-Sekolah', 'SD', 'SMP', 'SMA', 'Lulus/Umum']);
             $table->text('address')->nullable();
             $table->string('school_origin')->nullable();
             $table->date('registration_date');

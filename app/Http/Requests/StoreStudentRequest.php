@@ -24,6 +24,7 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'full_name' => 'required|string|max:255',
+            'education_level' => 'required|in:Pra-Sekolah,SD,SMP,SMA,Lulus/Umum',
             'parent_phone_number' => 'required|string|max:20',
             'address' => 'nullable|string',
             'school_origin' => 'nullable|string',

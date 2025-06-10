@@ -52,6 +52,7 @@ class StudentController extends Controller
             // 1. Simpan data siswa
             $student = Student::create([
                 'full_name' => $validated['full_name'],
+                'education_level' => $validated['education_level'],
                 'parent_phone_number' => $validated['parent_phone_number'],
                 'address' => $validated['address'],
                 'school_origin' => $validated['school_origin'],

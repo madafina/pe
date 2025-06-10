@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('required_level', ['Pra-Sekolah', 'SD', 'SMP', 'SMA', 'Lulus/Umum']);
             $table->text('description')->nullable();
             $table->timestamps();
         });

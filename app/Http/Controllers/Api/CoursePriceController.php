@@ -10,12 +10,19 @@ class CoursePriceController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate(['date' => 'required|date_format:Y-m-d']);
+        $request->validate([
+            'date' => 'required|date_format:Y-m-d',
+            'level' => 'required|string', // Validasi baru
+        ]);
 
         $selectedDate = $request->query('date');
+        $selectedLevel = $request->query('level');
 
-        // Cari harga di mana tanggal pendaftaran berada di dalam jendela pendaftaran
-        $coursePrices = CoursePrice::where('registration_open_date', '<=', $selectedDate)
+        $coursePrices = CoursePrice::whereHas('course', function ($query) use ($selectedLevel) {
+            // Filter berdasarkan required_level di tabel courses
+            $query->where('required_level', $selectedLevel);
+        })
+            ->where('registration_open_date', '<=', $selectedDate)
             ->where('registration_close_date', '>=', $selectedDate)
             ->with('course')
             ->get();

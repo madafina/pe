@@ -33,6 +33,19 @@
                             @enderror
                         </div>
 
+                        {{-- ALUR BARU: PILIH TINGKAT PENDIDIKAN (STATIS) --}}
+                        <div class="form-group">
+                            <label for="education_level">Tingkat Pendidikan Siswa</label>
+                            <select name="education_level" id="education_level" class="form-control" required>
+                                <option value="" disabled selected>-- Pilih Tingkat --</option>
+                                <option value="Pra-Sekolah">Pra-Sekolah (untuk Calistung)</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="Lulus/Umum">Lulus / Umum (untuk UTBK)</option>
+                            </select>
+                        </div>
+
                         {{-- No. HP Orang Tua --}}
                         <div class="form-group">
                             <label for="parent_phone_number">No. HP Orang Tua</label>
@@ -100,13 +113,21 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            // Fungsi untuk mengambil data paket berdasarkan tanggal yang dipilih
-            async function fetchCoursePrices(selectedDate) {
+            // Fungsi untuk mengambil data paket
+            async function fetchCoursePrices() {
+                const educationLevel = $('#education_level').val();
+                const selectedDate = $('#registration_date').val();
                 const coursePriceSelect = $('#course_price_id');
+
+                if (!educationLevel || !selectedDate) {
+                    coursePriceSelect.html('<option value="" disabled selected>-- Pilih Tingkat & Tanggal Dulu --</option>');
+                    return;
+                }
+
                 coursePriceSelect.prop('disabled', true).html('<option>Loading...</option>');
 
                 try {
-                    const url = `{{ route('api.course-prices') }}?date=${selectedDate}`;
+                    const url = `{{ route('api.course-prices') }}?date=${selectedDate}&level=${educationLevel}`;
 
                     const response = await fetch(url, {
                         headers: {

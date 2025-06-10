@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('course_prices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->string('valid_from', 5);
-            $table->string('valid_until', 5);
             $table->unsignedBigInteger('price');
+            $table->string('name'); // Nama Paket, e.g., "Gelombang Juli"
+            $table->date('registration_open_date');
+            $table->date('registration_close_date');
             $table->string('payment_notes');
             $table->date('payment_deadline');
             $table->timestamps();

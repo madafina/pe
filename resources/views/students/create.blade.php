@@ -23,7 +23,9 @@
                         {{-- Nama Lengkap --}}
                         <div class="form-group">
                             <label for="full_name">Nama Lengkap</label>
-                            <input type="text" name="full_name" class="form-control @error('full_name') is-invalid @enderror" id="full_name" placeholder="Masukkan nama lengkap" value="{{ old('full_name') }}" required>
+                            <input type="text" name="full_name"
+                                class="form-control @error('full_name') is-invalid @enderror" id="full_name"
+                                placeholder="Masukkan nama lengkap" value="{{ old('full_name') }}" required>
                             @error('full_name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -34,7 +36,10 @@
                         {{-- No. HP Orang Tua --}}
                         <div class="form-group">
                             <label for="parent_phone_number">No. HP Orang Tua</label>
-                            <input type="text" name="parent_phone_number" class="form-control @error('parent_phone_number') is-invalid @enderror" id="parent_phone_number" placeholder="Contoh: 08123456789" value="{{ old('parent_phone_number') }}" required>
+                            <input type="text" name="parent_phone_number"
+                                class="form-control @error('parent_phone_number') is-invalid @enderror"
+                                id="parent_phone_number" placeholder="Contoh: 08123456789"
+                                value="{{ old('parent_phone_number') }}" required>
                             @error('parent_phone_number')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -48,25 +53,31 @@
                             <textarea name="address" class="form-control" id="address" rows="3" placeholder="Masukkan alamat lengkap">{{ old('address') }}</textarea>
                         </div>
 
-                         {{-- Sekolah Asal --}}
+                        {{-- Sekolah Asal --}}
                         <div class="form-group">
                             <label for="school_origin">Sekolah Asal</label>
-                            <input type="text" name="school_origin" class="form-control" id="school_origin" placeholder="Masukkan sekolah asal" value="{{ old('school_origin') }}">
+                            <input type="text" name="school_origin" class="form-control" id="school_origin"
+                                placeholder="Masukkan sekolah asal" value="{{ old('school_origin') }}">
                         </div>
 
                     </div>
-                     <div class="col-md-6">
-                        <h4>Pilihan Program</h4><hr>
+                    <div class="col-md-6">
+                        <h4>Pilihan Program</h4>
+                        <hr>
                         <div class="form-group">
                             <label for="registration_date">Tanggal Pendaftaran</label>
-                            <input type="date" name="registration_date" id="registration_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                            <input type="date" name="registration_date" id="registration_date" class="form-control"
+                                value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="form-group">
                             <label for="course_price_id">Pilih Paket Bimbel</label>
-                            <select name="course_price_id" id="course_price_id" class="form-control @error('course_price_id') is-invalid @enderror" required>
+                            <select name="course_price_id" id="course_price_id"
+                                class="form-control @error('course_price_id') is-invalid @enderror" required>
                                 <option value="" disabled selected>-- Pilih Tanggal Dulu --</option>
                             </select>
-                            @error('course_price_id')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                            @error('course_price_id')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -105,21 +116,26 @@
                     });
 
                     const prices = await response.json();
-                    coursePriceSelect.empty().append('<option value="" disabled selected>-- Pilih Paket --</option>');
+                    coursePriceSelect.empty().append(
+                        '<option value="" disabled selected>-- Pilih Paket --</option>');
 
                     if (prices.length > 0) {
                         prices.forEach(price => {
                             const priceFormatted = new Intl.NumberFormat('id-ID').format(price.price);
-                            // Menampilkan nama program dan catatan pembayaran untuk kejelasan
-                            const optionText = `${price.course.name} - ${price.payment_notes} (Rp ${priceFormatted})`;
-                            coursePriceSelect.append(`<option value="${price.id}">${optionText}</option>`);
+                            // Tampilkan nama program dan nama paketnya
+                            const optionText =
+                                `${price.course.name} - ${price.name} (Rp ${priceFormatted})`;
+                            coursePriceSelect.append(
+                                `<option value="${price.id}">${optionText}</option>`);
                         });
                     } else {
-                        coursePriceSelect.html('<option value="" disabled selected>-- Tidak ada paket tersedia --</option>');
+                        coursePriceSelect.html(
+                            '<option value="" disabled selected>-- Tidak ada paket tersedia --</option>');
                     }
                 } catch (error) {
                     console.error('Error fetching course prices:', error);
-                    coursePriceSelect.html('<option value="" disabled selected>-- Gagal memuat data --</option>');
+                    coursePriceSelect.html(
+                        '<option value="" disabled selected>-- Gagal memuat data --</option>');
                 } finally {
                     coursePriceSelect.prop('disabled', false);
                 }

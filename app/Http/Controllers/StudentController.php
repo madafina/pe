@@ -13,19 +13,19 @@ use App\Models\Course;
 
 class StudentController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      */
-     public function index(StudentDataTable $dataTable) 
+    public function index(StudentDataTable $dataTable)
     {
         // Ambil semua data program untuk filter dropdown
-        $courses = Course::orderBy('name')->get(); 
+        $courses = Course::orderBy('name')->get();
 
         // Semua logika tabel sekarang dihandle oleh StudentDataTable
         return $dataTable->render('students.index', compact('courses'));
     }
 
-    public function show(Student $student) 
+    public function show(Student $student)
     {
         // Eager load semua relasi yang dibutuhkan untuk halaman detail
         $student->load('registration.coursePrice.course', 'registration.invoices');
@@ -35,8 +35,8 @@ class StudentController extends Controller
 
     public function create()
     {
-        $coursePrices = CoursePrice::with('course')->get();
-        return view('students.create', compact('coursePrices'));
+        // Kita tidak perlu mengirim $coursePrices lagi
+        return view('students.create');
     }
 
     /**
@@ -67,7 +67,7 @@ class StudentController extends Controller
                 'transaction_date' => now(),
                 'initial_payment_status' => 'Unpaid',
             ]);
-            
+
             // 3. Buat Invoice pertama
             Invoice::create([
                 'registration_id' => $registration->id,
@@ -81,12 +81,11 @@ class StudentController extends Controller
             DB::commit();
 
             return redirect()->route('students.index')->with('success', 'Siswa berhasil didaftarkan!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan. Error: ' . $e->getMessage());
         }
     }
-    
+
     // ... sisa method lainnya ...
 }

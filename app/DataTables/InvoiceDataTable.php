@@ -12,44 +12,40 @@ use Yajra\DataTables\Services\DataTable;
 
 class InvoiceDataTable extends DataTable
 {
-    /**
-     * Build the DataTable class.
-     */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
+
             ->addColumn('action', function ($row) {
-                // Hanya tampilkan tombol jika statusnya 'Unpaid'
-                if ($row->status == 'Unpaid') {
-                    $btn = '<a href="javascript:void(0)" 
-                   data-id="' . $row->id . '" 
-                   class="btn btn-primary btn-sm verify-btn">Verifikasi</a>';
-                    return $btn;
+                if (strtolower($row->getCalculatedStatusAttribute()) != 'paid') {
+                    return '<a href="javascript:void(0)" 
+                               data-id="' . $row->id . '"
+                               data-remaining="' . $row->remaining_amount . '"
+                               class="btn btn-primary btn-sm record-payment-btn">Catat Bayar</a>';
                 }
-                return '<span class="text-muted">N/A</span>';
+                return '<span class="text-muted">Lunas</span>';
             })
             ->addColumn('student_name', function ($row) {
                 return $row->registration->student->full_name;
-            })
+            })          
             ->editColumn('amount', function ($row) {
-                return 'Rp ' . number_format($row->amount, 0, ',', '.');
+                $sisa = ' (Sisa: Rp ' . number_format($row->remaining_amount, 0, ',', '.') . ')';
+                return 'Rp ' . number_format($row->amount, 0, ',', '.') . '<br><small class="text-danger font-italic">' . $sisa . '</small>';
             })
             ->editColumn('due_date', function ($row) {
                 return \Carbon\Carbon::parse($row->due_date)->format('d M Y');
-            })
+            })           
             ->editColumn('status', function ($row) {
-                $status = $row->status;
-                if ($status == 'Paid') {
-                    $badgeClass = 'badge-success';
-                } elseif ($status == 'Overdue') {
-                    $badgeClass = 'badge-danger';
-                } else {
-                    $badgeClass = 'badge-warning';
-                }
-                return "<span class=\"badge {$badgeClass}\">{$status}</span>";
+                $status = $row->getCalculatedStatusAttribute(); // Gunakan status dinamis
+                $badge_class = 'badge-secondary';
+                if ($status == 'Paid') $badge_class = 'badge-success';
+                if ($status == 'Partially Paid') $badge_class = 'badge-info';
+                if ($status == 'Unpaid') $badge_class = 'badge-warning';
+                if ($status == 'Overdue') $badge_class = 'badge-danger';
+                return "<span class=\"badge {$badge_class}\">{$status}</span>";
             })
-            ->rawColumns(['status', 'action']);
+            ->rawColumns(['status', 'action','amount']);
     }
 
     /**
@@ -76,15 +72,19 @@ class InvoiceDataTable extends DataTable
         return $this->builder()
             ->setTableId('invoice-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->dom('Bfrtip')
-            ->orderBy(1)
-            ->buttons([Button::make('excel'), Button::make('reload')])
+            // ->minifiedAjax() // Kita hapus ini untuk kontrol penuh
             ->ajax([
+                'url' => route('invoices.index'), // Tentukan URL secara eksplisit
+                'type' => 'GET',
                 'data' => "function(d) {
                         d.status = $('#status_filter').val();
+                        // Tambahkan parameter acak untuk mencegah caching
+                        d._ = new Date().getTime();
                     }"
-            ]);
+            ])
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons([Button::make('excel'), Button::make('reload')]);
     }
 
     /**
@@ -96,14 +96,10 @@ class InvoiceDataTable extends DataTable
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('invoice_number')->title('No. Invoice'),
             Column::make('student_name')->title('Nama Siswa'),
-            Column::make('amount')->title('Jumlah'),
+            Column::computed('amount')->title('Jumlah Tagihan'),
             Column::make('due_date')->title('Jatuh Tempo'),
             Column::make('status')->title('Status'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(100)
-                ->addClass('text-center'),
+            Column::computed('action')->width(100)->addClass('text-center'),
         ];
     }
 

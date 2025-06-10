@@ -11,18 +11,24 @@ class StorePaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $invoice = $this->route('invoice');
+
         return [
-            //
+            'amount_paid' => 'required|numeric|min:1|max:' . $invoice->remaining_amount,
+            'payment_date' => 'required|date',
+            'notes' => 'nullable|string',
+            // Tambahkan validasi untuk file bukti
+            'proof_of_payment' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
         ];
+    }
+
+    public function messages(): array
+    {
+        return ['amount_paid.max' => 'Jumlah bayar tidak boleh melebihi sisa tagihan.'];
     }
 }

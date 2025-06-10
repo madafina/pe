@@ -25,7 +25,17 @@ class PaymentController extends Controller
             'proof_of_payment' => $proofPath,
         ]);
 
-        if($invoice->fresh()->remaining_amount <= 0) {
+        // --- LOGIKA AKTIVASI SISWA ---
+        $student = $invoice->registration->student;
+        // Cek jika status siswa masih Non-Aktif
+        if ($student->status == 'Non-Aktif') {
+            // Ubah menjadi Aktif
+            $student->status = 'Aktif';
+            $student->save();
+        }
+        // --- SELESAI LOGIKA AKTIVASI ---
+
+        if ($invoice->fresh()->remaining_amount <= 0) {
             $invoice->status = 'Paid';
             $invoice->save();
         }

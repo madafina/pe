@@ -35,16 +35,25 @@ class StudentDataTable extends DataTable
                 // Memformat tanggal
                 return \Carbon\Carbon::parse($row->registration_date)->format('d M Y');
             })
-            ->editColumn('registration.initial_payment_status', function ($row) {
-                // Memformat status dengan badge
-                if ($row->registration) {
-                    $status = $row->registration->initial_payment_status;
-                    $badgeClass = $status == 'Paid' ? 'badge-success' : 'badge-warning';
-                    return "<span class=\"badge {$badgeClass}\">{$status}</span>";
-                }
-                return 'N/A';
+            ->editColumn('status', function ($row) {
+                $status = $row->status;
+                $badgeClass = 'badge-secondary';
+                if ($status == 'Aktif') $badgeClass = 'badge-success';
+                if ($status == 'Non-Aktif') $badgeClass = 'badge-warning';
+                if ($status == 'Lulus') $badgeClass = 'badge-info';
+                if ($status == 'Berhenti') $badgeClass = 'badge-danger';
+                return "<span class=\"badge {$badgeClass}\">{$status}</span>";
             })
-            ->rawColumns(['action', 'registration.initial_payment_status']); // Memberitahu datatables kolom mana yang berisi HTML
+            // ->editColumn('registration.initial_payment_status', function ($row) {
+            //     // Memformat status dengan badge
+            //     if ($row->registration) {
+            //         $status = $row->registration->initial_payment_status;
+            //         $badgeClass = $status == 'Paid' ? 'badge-success' : 'badge-warning';
+            //         return "<span class=\"badge {$badgeClass}\">{$status}</span>";
+            //     }
+            //     return 'N/A';
+            // })
+            ->rawColumns(['action', 'registration.initial_payment_status','status']); // Memberitahu datatables kolom mana yang berisi HTML
     }
 
     /**
@@ -101,7 +110,8 @@ class StudentDataTable extends DataTable
             Column::make('full_name')->title('Nama Lengkap'),
             Column::make('program')->title('Program')->orderable(false)->searchable(false),
             Column::make('registration_date')->title('Tgl. Daftar'),
-            Column::make('registration.initial_payment_status')->title('Status Tagihan Awal')->orderable(false)->searchable(false),
+            Column::make('status')->title('Status Siswa'),
+            // Column::make('registration.initial_payment_status')->title('Status Tagihan Awal')->orderable(false)->searchable(false),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

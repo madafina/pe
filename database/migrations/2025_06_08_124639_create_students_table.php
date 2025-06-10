@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('school_origin')->nullable();
             $table->date('registration_date');
-            $table->enum('status', ['Active', 'Graduated', 'Quit'])->default('Active');
+            $table->enum('status', ['Aktif', 'Non-Aktif', 'Lulus', 'Berhenti'])->default('Non-Aktif'); 
             $table->timestamps();
         });
     }

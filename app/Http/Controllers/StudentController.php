@@ -57,6 +57,7 @@ class StudentController extends Controller
                 'address' => $validated['address'],
                 'school_origin' => $validated['school_origin'],
                 'registration_date' => $validated['registration_date'], // Simpan tanggal dari form
+                'status' => 'Non-Aktif',
             ]);
 
             $coursePrice = CoursePrice::find($validated['course_price_id']);

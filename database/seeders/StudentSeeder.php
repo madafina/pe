@@ -29,6 +29,7 @@ class StudentSeeder extends Seeder
                 'address' => 'Jl. Merdeka No. ' . rand(1, 100),
                 'school_origin' => 'Sekolah Harapan Bangsa',
                 'registration_date' => now()->subDays(rand(1, 30)),
+                'status' => 'Non-Aktif',
             ]);
 
             // 3. Buat data pendaftaran

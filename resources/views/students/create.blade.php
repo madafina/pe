@@ -1,0 +1,98 @@
+@extends('adminlte::page')
+
+@section('title', 'Pendaftaran Siswa Baru')
+
+@section('content_header')
+    <h1>Pendaftaran Siswa Baru</h1>
+@stop
+
+@section('content')
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Formulir Pendaftaran</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="{{ route('students.store') }}" method="POST">
+            @csrf
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Data Siswa</h4>
+                        <hr>
+                        {{-- Nama Lengkap --}}
+                        <div class="form-group">
+                            <label for="full_name">Nama Lengkap</label>
+                            <input type="text" name="full_name" class="form-control @error('full_name') is-invalid @enderror" id="full_name" placeholder="Masukkan nama lengkap" value="{{ old('full_name') }}" required>
+                            @error('full_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        {{-- No. HP Orang Tua --}}
+                        <div class="form-group">
+                            <label for="parent_phone_number">No. HP Orang Tua</label>
+                            <input type="text" name="parent_phone_number" class="form-control @error('parent_phone_number') is-invalid @enderror" id="parent_phone_number" placeholder="Contoh: 08123456789" value="{{ old('parent_phone_number') }}" required>
+                            @error('parent_phone_number')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        {{-- Alamat --}}
+                        <div class="form-group">
+                            <label for="address">Alamat</label>
+                            <textarea name="address" class="form-control" id="address" rows="3" placeholder="Masukkan alamat lengkap">{{ old('address') }}</textarea>
+                        </div>
+
+                         {{-- Sekolah Asal --}}
+                        <div class="form-group">
+                            <label for="school_origin">Sekolah Asal</label>
+                            <input type="text" name="school_origin" class="form-control" id="school_origin" placeholder="Masukkan sekolah asal" value="{{ old('school_origin') }}">
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Pilihan Program</h4>
+                        <hr>
+                         {{-- Paket Bimbel --}}
+                        <div class="form-group">
+                            <label for="course_price_id">Pilih Paket Bimbel</label>
+                            <select name="course_price_id" id="course_price_id" class="form-control @error('course_price_id') is-invalid @enderror" required>
+                                <option value="" disabled selected>-- Pilih salah satu --</option>
+                                @foreach ($coursePrices as $price)
+                                    <option value="{{ $price->id }}" {{ old('course_price_id') == $price->id ? 'selected' : '' }}>
+                                        {{ $price->course->name }} - Periode {{ $price->enrollment_period }} (Rp {{ number_format($price->price, 0, ',', '.') }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('course_price_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Daftarkan Siswa</button>
+                <a href="{{ route('students.index') }}" class="btn btn-secondary">Batal</a>
+            </div>
+        </form>
+    </div>
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@stop
+
+@section('js')
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+@stop

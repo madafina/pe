@@ -10,18 +10,19 @@ class CoursePriceController extends Controller
 {
     public function index(Request $request)
     {
-        // Validasi request, pastikan ada parameter 'month'
-        $request->validate(['month' => 'required|string']);
+        $request->validate(['date' => 'required|date_format:Y-m-d']);
+        $selectedDate = \Carbon\Carbon::parse($request->query('date'))->format('m-d');
 
-        // Ambil nama bulan dari request, contoh: "Juli", "Oktober"
-        $monthName = $request->query('month');
+        $coursePrices = CoursePrice::where(function ($query) use ($selectedDate) {
+            $query->where(function ($subQuery) use ($selectedDate) {
+                $subQuery->whereRaw('valid_from <= valid_until')->whereRaw('? BETWEEN valid_from AND valid_until', [$selectedDate]);
+            })->orWhere(function ($subQuery) use ($selectedDate) {
+                $subQuery->whereRaw('valid_from > valid_until')->where(function ($q) use ($selectedDate) {
+                    $q->whereRaw('? >= valid_from', [$selectedDate])->orWhereRaw('? <= valid_until', [$selectedDate]);
+                });
+            });
+        })->with('course')->get();
 
-        // Cari semua harga kursus yang periode masuknya cocok dengan bulan yang dikirim
-        $coursePrices = CoursePrice::where('enrollment_period', $monthName)
-                                   ->with('course') // Ambil juga data relasi kursusnya
-                                   ->get();
-
-        // Kembalikan hasilnya dalam format JSON
         return response()->json($coursePrices);
     }
 }

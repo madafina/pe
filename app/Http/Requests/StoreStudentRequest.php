@@ -22,16 +22,16 @@ class StoreStudentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $invoice = $this->route('invoice');
-
         return [
-            'amount_paid' => 'required|numeric|min:1|max:' . $invoice->remaining_amount,
-            'payment_date' => 'required|date',
-            'notes' => 'nullable|string',
-            // Tambahkan validasi untuk file bukti
-            'proof_of_payment' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
+            'full_name' => 'required|string|max:255',
+            'parent_phone_number' => 'required|string|max:20',
+            'address' => 'nullable|string',
+            'school_origin' => 'nullable|string',
+            'registration_date' => 'required|date', // Validasi untuk tanggal
+            'course_price_id' => 'required|exists:course_prices,id',
         ];
     }
+
 
     /**
      * Get the custom validation messages.

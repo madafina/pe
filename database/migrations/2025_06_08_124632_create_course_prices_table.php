@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('course_prices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->string('enrollment_period'); // e.g., "July", "October"
+            $table->string('valid_from', 5);
+            $table->string('valid_until', 5);
             $table->unsignedBigInteger('price');
             $table->string('payment_notes');
+            $table->date('payment_deadline');
             $table->timestamps();
         });
     }

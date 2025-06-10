@@ -55,7 +55,7 @@ class StudentController extends Controller
                 'parent_phone_number' => $validated['parent_phone_number'],
                 'address' => $validated['address'],
                 'school_origin' => $validated['school_origin'],
-                'registration_date' => now(),
+                'registration_date' => $validated['registration_date'], // Simpan tanggal dari form
             ]);
 
             $coursePrice = CoursePrice::find($validated['course_price_id']);
@@ -75,7 +75,7 @@ class StudentController extends Controller
                 'description' => 'Biaya Pendaftaran Program ' . $coursePrice->course->name,
                 'amount' => $coursePrice->price,
                 'issue_date' => now(),
-                'due_date' => now()->addDays(7),
+                'due_date' => $coursePrice->payment_deadline, 
             ]);
 
             DB::commit();

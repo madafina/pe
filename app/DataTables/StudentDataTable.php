@@ -27,7 +27,7 @@ class StudentDataTable extends DataTable
             ->addColumn('program', function ($row) {
                 // Kolom kustom untuk menampilkan nama program
                 if ($row->registration && $row->registration->coursePrice && $row->registration->coursePrice->course) {
-                    return $row->registration->coursePrice->course->name . ' - ' . $row->registration->coursePrice->enrollment_period;
+                    return $row->registration->coursePrice->course->name;
                 }
                 return 'N/A';
             })
@@ -53,7 +53,7 @@ class StudentDataTable extends DataTable
             //     }
             //     return 'N/A';
             // })
-            ->rawColumns(['action', 'registration.initial_payment_status','status']); // Memberitahu datatables kolom mana yang berisi HTML
+            ->rawColumns(['action', 'registration.initial_payment_status', 'status']); // Memberitahu datatables kolom mana yang berisi HTML
     }
 
     /**
@@ -69,6 +69,11 @@ class StudentDataTable extends DataTable
             $query->whereHas('registration.coursePrice', function ($q) use ($course_id) {
                 $q->where('course_id', $course_id);
             });
+        }
+
+        // Filter berdasarkan Status Siswa (yang baru)
+        if ($status = $this->request()->get('status')) {
+            $query->where('status', $status);
         }
 
         return $query;
@@ -96,6 +101,7 @@ class StudentDataTable extends DataTable
             ->ajax([
                 'data' => "function(d) {
                         d.course_id = $('#course_filter').val();
+                        d.status = $('#status_filter').val();
                     }"
             ]);
     }

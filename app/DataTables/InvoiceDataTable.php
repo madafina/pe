@@ -28,14 +28,14 @@ class InvoiceDataTable extends DataTable
             })
             ->addColumn('student_name', function ($row) {
                 return $row->registration->student->full_name;
-            })          
+            })
             ->editColumn('amount', function ($row) {
                 $sisa = ' (Sisa: Rp ' . number_format($row->remaining_amount, 0, ',', '.') . ')';
                 return 'Rp ' . number_format($row->amount, 0, ',', '.') . '<br><small class="text-danger font-italic">' . $sisa . '</small>';
             })
             ->editColumn('due_date', function ($row) {
                 return \Carbon\Carbon::parse($row->due_date)->format('d M Y');
-            })           
+            })
             ->editColumn('status', function ($row) {
                 $status = $row->getCalculatedStatusAttribute(); // Gunakan status dinamis
                 $badge_class = 'badge-secondary';
@@ -45,7 +45,7 @@ class InvoiceDataTable extends DataTable
                 if ($status == 'Overdue') $badge_class = 'badge-danger';
                 return "<span class=\"badge {$badge_class}\">{$status}</span>";
             })
-            ->rawColumns(['status', 'action','amount']);
+            ->rawColumns(['status', 'action', 'amount']);
     }
 
     /**
@@ -53,11 +53,19 @@ class InvoiceDataTable extends DataTable
      */
     public function query(Invoice $model): QueryBuilder
     {
-        $query = $model->newQuery()->with('registration.student');
+        $query = $model->newQuery()->with('registration.student', 'payments')->withSum('payments', 'amount_paid');
 
-        // TERAPKAN FILTER JIKA ADA INPUT DARI REQUEST
-        if ($this->request()->get('status')) {
-            $query->where('status', $this->request()->get('status'));
+        // Terapkan filter berdasarkan status yang dipilih
+        if ($status = $this->request()->get('status')) {
+            if ($status == 'Paid') {
+                $query->where('status', 'Paid');
+            } elseif ($status == 'Partially Paid') {
+                $query->where('status', '!=', 'Paid')->whereHas('payments');
+            } elseif ($status == 'Unpaid') {
+                $query->where('status', '!=', 'Paid')->whereDoesntHave('payments');
+            } elseif ($status == 'Overdue') {
+                $query->where('status', '!=', 'Paid')->where('due_date', '<', now()->toDateString());
+            }
         }
 
         return $query;

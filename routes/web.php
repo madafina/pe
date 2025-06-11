@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CoursePriceController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudyClassController;
+use App\Http\Controllers\AttendanceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,10 +40,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('tutors', TutorController::class);
     Route::resource('subjects', SubjectController::class);
-
+    // route manajemen kelas
     Route::resource('study-classes', StudyClassController::class);
     Route::post('/study-classes/{studyClass}/add-student', [StudyClassController::class, 'addStudent'])->name('study-classes.addStudent');
     Route::delete('/study-classes/{studyClass}/remove-student/{student}', [StudyClassController::class, 'removeStudent'])->name('study-classes.removeStudent');
+    // route presensi
+    Route::get('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'create'])->name('attendances.create');
+    Route::post('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+    Route::get('/study-classes/{studyClass}/attendances/history', [AttendanceController::class, 'history'])->name('attendances.history');
 });
 
 require __DIR__ . '/auth.php';

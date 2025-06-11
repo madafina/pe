@@ -6,9 +6,11 @@
     {{-- Header dinamis --}}
     <h1>Detail Kelas: {{ $studyClass->name }}</h1>
     <p>
-        <strong>Mata Pelajaran:</strong> {{ $studyClass->subject->name }} | 
-        <strong>Tutor:</strong> {{ $studyClass->tutor->name }} | 
-        <strong>Jadwal:</strong> {{ $studyClass->day_of_week }}, {{ \Carbon\Carbon::parse($studyClass->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($studyClass->end_time)->format('H:i') }}
+        <strong>Mata Pelajaran:</strong> {{ $studyClass->subject->name }} |
+        <strong>Tutor:</strong> {{ $studyClass->tutor->name }} |
+        <strong>Jadwal:</strong> {{ $studyClass->day_of_week }},
+        {{ \Carbon\Carbon::parse($studyClass->start_time)->format('H:i') }} -
+        {{ \Carbon\Carbon::parse($studyClass->end_time)->format('H:i') }}
     </p>
 @stop
 
@@ -28,7 +30,9 @@
                                     <td>{{ $student->full_name }}</td>
                                     <td class="text-right">
                                         {{-- Form untuk mengeluarkan siswa --}}
-                                        <form action="{{ route('study-classes.removeStudent', ['studyClass' => $studyClass->id, 'student' => $student->id]) }}" method="POST" class="d-inline">
+                                        <form
+                                            action="{{ route('study-classes.removeStudent', ['studyClass' => $studyClass->id, 'student' => $student->id]) }}"
+                                            method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-xs">Keluarkan</button>
@@ -36,7 +40,9 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td>Belum ada siswa di kelas ini.</td></tr>
+                                <tr>
+                                    <td>Belum ada siswa di kelas ini.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -72,18 +78,22 @@
         </div>
     </div>
     <a href="{{ route('study-classes.index') }}" class="btn btn-secondary mt-3">Kembali ke Daftar Kelas</a>
+    <a href="{{ route('attendances.create', $studyClass->id) }}" class="btn btn-success mt-3">Ambil Presensi Hari Ini</a>
+    <a href="{{ route('attendances.history', $studyClass->id) }}" class="btn btn-info mt-3">Lihat Riwayat Presensi</a>
+
+
 @stop
 
 @section('js')
-    @if(session('success'))
-    <script>
-        Swal.fire({
-            type: 'success',
-            title: 'Berhasil!',
-            text: '{{ session('success') }}',
-            showConfirmButton: false,
-            timer: 2000
-        });
-    </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                type: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
     @endif
 @stop

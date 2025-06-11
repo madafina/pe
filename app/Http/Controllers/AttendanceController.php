@@ -6,6 +6,7 @@ use App\Models\StudyClass;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Student;
 
 class AttendanceController extends Controller
 {
@@ -44,6 +45,29 @@ class AttendanceController extends Controller
         }
 
         return redirect()->route('study-classes.show', $studyClass->id)
-                         ->with('success', 'Presensi untuk tanggal ' . $request->attendance_date . ' berhasil disimpan!');
+            ->with('success', 'Presensi untuk tanggal ' . $request->attendance_date . ' berhasil disimpan!');
+    }
+    /**
+     * Menampilkan halaman riwayat presensi.
+     */
+    public function history(Request $request, StudyClass $studyClass)
+    {
+        // Eager load relasi untuk efisiensi
+        $studyClass->load('students');
+
+        // Ambil data presensi untuk kelas ini
+        $attendancesQuery = Attendance::where('study_class_id', $studyClass->id)
+            ->with('student') // Ambil juga data siswa
+            ->latest('attendance_date'); // Urutkan dari terbaru
+
+        // Terapkan filter tanggal jika ada
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $attendancesQuery->whereBetween('attendance_date', [$request->start_date, $request->end_date]);
+        }
+
+        // Ambil hasilnya dan kelompokkan berdasarkan tanggal
+        $attendances = $attendancesQuery->get()->groupBy('attendance_date');
+
+        return view('attendances.history', compact('studyClass', 'attendances'));
     }
 }

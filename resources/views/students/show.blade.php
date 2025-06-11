@@ -23,31 +23,34 @@
                             <b>Sekolah Asal</b> <a class="float-right">{{ $student->school_origin ?? '-' }}</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Tgl. Daftar</b> <a class="float-right">{{ \Carbon\Carbon::parse($student->registration_date)->format('d M Y') }}</a>
+                            <b>Tgl. Daftar</b> <a
+                                class="float-right">{{ \Carbon\Carbon::parse($student->registration_date)->format('d M Y') }}</a>
                         </li>
                     </ul>
-                     <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
+                    <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
                     <p class="text-muted">{{ $student->address ?? 'Tidak ada data.' }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-             {{-- KARTU PROGRAM & KEUANGAN --}}
+            {{-- KARTU PROGRAM & KEUANGAN --}}
             <div class="card">
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#registration" data-toggle="tab">Program & Keuangan</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#registration" data-toggle="tab">Program &
+                                Keuangan</a></li>
                     </ul>
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="active tab-pane" id="registration">
-                            @if($student->registration)
+                            @if ($student->registration)
                                 <h5><strong>Program yang Diambil</strong></h5>
                                 <p>
-                                    {{ $student->registration->coursePrice->course->name }} - Periode {{ $student->registration->coursePrice->enrollment_period }}
+                                    {{ $student->registration->coursePrice->course->name }}
                                     <br>
-                                    <small>Biaya: Rp {{ number_format($student->registration->coursePrice->price, 0, ',', '.') }}</small>
+                                    <small>Biaya: Rp
+                                        {{ number_format($student->registration->coursePrice->price, 0, ',', '.') }}</small>
                                 </p>
                                 <hr>
                                 <h5><strong>Riwayat Tagihan (Invoice)</strong></h5>
@@ -69,7 +72,8 @@
                                                 <td>Rp {{ number_format($invoice->amount, 0, ',', '.') }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($invoice->due_date)->format('d M Y') }}</td>
                                                 <td>
-                                                    <span class="badge @if($invoice->status == 'Paid') badge-success @else badge-warning @endif">
+                                                    <span
+                                                        class="badge @if ($invoice->status == 'Paid') badge-success @else badge-warning @endif">
                                                         {{ $invoice->status }}
                                                     </span>
                                                 </td>

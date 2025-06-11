@@ -44,15 +44,7 @@ class StudentDataTable extends DataTable
                 if ($status == 'Berhenti') $badgeClass = 'badge-danger';
                 return "<span class=\"badge {$badgeClass}\">{$status}</span>";
             })
-            // ->editColumn('registration.initial_payment_status', function ($row) {
-            //     // Memformat status dengan badge
-            //     if ($row->registration) {
-            //         $status = $row->registration->initial_payment_status;
-            //         $badgeClass = $status == 'Paid' ? 'badge-success' : 'badge-warning';
-            //         return "<span class=\"badge {$badgeClass}\">{$status}</span>";
-            //     }
-            //     return 'N/A';
-            // })
+
             ->rawColumns(['action', 'registration.initial_payment_status', 'status']); // Memberitahu datatables kolom mana yang berisi HTML
     }
 
@@ -61,7 +53,7 @@ class StudentDataTable extends DataTable
      */
     public function query(Student $model): QueryBuilder
     {
-        $query = $model->newQuery()->with('registration.coursePrice.course');
+        $query = $model->newQuery()->with('registration.coursePrice.course')->orderBy('id', 'desc');
 
         // TERAPKAN FILTER JIKA ADA INPUT DARI REQUEST
         if ($this->request()->get('course_id')) {
@@ -89,7 +81,7 @@ class StudentDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
-            ->orderBy(1)
+            // ->orderBy(1, 'desc')
             ->selectStyleSingle()
             ->buttons([
                 Button::make('excel'),

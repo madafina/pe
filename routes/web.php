@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::post('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify');
     Route::post('/payments/{invoice}', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
 
     // Route untuk API mengambil harga kursus <-- TAMBAHKAN INI
     Route::get('/api/course-prices', [CoursePriceController::class, 'index'])->name('api.course-prices');
@@ -48,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'create'])->name('attendances.create');
     Route::post('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
     Route::get('/study-classes/{studyClass}/attendances/history', [AttendanceController::class, 'history'])->name('attendances.history');
+
 });
 
 require __DIR__ . '/auth.php';

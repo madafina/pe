@@ -6,9 +6,15 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use Illuminate\Support\Facades\Auth;
+use App\DataTables\PaymentDataTable;
 
 class PaymentController extends Controller
 {
+    public function index(PaymentDataTable $dataTable)
+    {
+        return $dataTable->render('payments.index');
+    }
+
     public function store(StorePaymentRequest $request, Invoice $invoice)
     {
         $proofPath = null;

@@ -38,11 +38,11 @@
                             <label for="education_level">Tingkat Pendidikan Siswa</label>
                             <select name="education_level" id="education_level" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih Tingkat --</option>
-                                <option value="Pra-Sekolah">Pra-Sekolah (untuk Calistung)</option>
+                                <option value="Pra-Sekolah">Pra-Sekolah</option>
                                 <option value="SD">SD</option>
                                 <option value="SMP">SMP</option>
                                 <option value="SMA">SMA</option>
-                                <option value="Lulus/Umum">Lulus / Umum (untuk UTBK)</option>
+                                <option value="Lulus/Umum">Lulus / Umum</option>
                             </select>
                         </div>
 

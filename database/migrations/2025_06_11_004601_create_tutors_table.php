@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('specialization')->nullable(); // e.g., "Matematika, Fisika"
             $table->boolean('is_active')->default(true);
+            $table->softDeletes(); 
             $table->timestamps();
         });
     }

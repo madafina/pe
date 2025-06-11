@@ -352,6 +352,20 @@ return [
             'route'  => 'tutors.index',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
         ],
+        [
+            'text' => 'Data Mata Pelajaran',
+            'route'  => 'subjects.index',
+            'icon' => 'fas fa-fw fa-book',
+        ],
+        [
+            'header' => 'OPERASIONAL AKADEMIK',
+            'classes'  => 'text-bold text-sm',
+        ],
+        [
+            'text' => 'Manajemen Kelas',
+            'route'  => 'study-classes.index',
+            'icon' => 'fas fa-fw fa-school',
+        ],
     ],
 
     /*

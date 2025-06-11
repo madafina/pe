@@ -7,6 +7,8 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Api\CoursePriceController;
 use App\Http\Controllers\TutorController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\StudyClassController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,10 +34,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify');
     Route::post('/payments/{invoice}', [PaymentController::class, 'store'])->name('payments.store');
 
-     // Route untuk API mengambil harga kursus <-- TAMBAHKAN INI
+    // Route untuk API mengambil harga kursus <-- TAMBAHKAN INI
     Route::get('/api/course-prices', [CoursePriceController::class, 'index'])->name('api.course-prices');
 
-     Route::resource('tutors', TutorController::class);
+    Route::resource('tutors', TutorController::class);
+    Route::resource('subjects', SubjectController::class);
+
+    Route::resource('study-classes', StudyClassController::class);
+    Route::post('/study-classes/{studyClass}/add-student', [StudyClassController::class, 'addStudent'])->name('study-classes.addStudent');
+    Route::delete('/study-classes/{studyClass}/remove-student/{student}', [StudyClassController::class, 'removeStudent'])->name('study-classes.removeStudent');
 });
 
 require __DIR__ . '/auth.php';

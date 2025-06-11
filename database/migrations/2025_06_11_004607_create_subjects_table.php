@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->foreignId('course_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

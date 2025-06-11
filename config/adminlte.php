@@ -343,6 +343,15 @@ return [
                 ],
             ],
         ],
+
+        [
+            'header' => 'MASTER AKADEMIK',
+        ],
+        [
+            'text' => 'Data Tutor',
+            'route'  => 'tutors.index',
+            'icon' => 'fas fa-fw fa-chalkboard-teacher',
+        ],
     ],
 
     /*

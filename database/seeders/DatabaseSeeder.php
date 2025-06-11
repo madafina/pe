@@ -24,7 +24,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CourseSeeder::class,
             CoursePriceSeeder::class,
-            StudentSeeder::class
+            StudentSeeder::class,
+            TutorSeeder::class,
+            SubjectSeeder::class,
+            StudyClassSeeder::class,
         ]);
     }
 }

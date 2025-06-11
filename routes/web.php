@@ -6,6 +6,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Api\CoursePriceController;
+use App\Http\Controllers\TutorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
      // Route untuk API mengambil harga kursus <-- TAMBAHKAN INI
     Route::get('/api/course-prices', [CoursePriceController::class, 'index'])->name('api.course-prices');
+
+     Route::resource('tutors', TutorController::class);
 });
 
 require __DIR__ . '/auth.php';

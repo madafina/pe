@@ -5,73 +5,66 @@
 @stop
 
 @section('content')
-    {{-- FORM FILTER --}}
+    {{-- HAPUS FORM FILTER --}}
+
+    {{-- TABEL PIVOT RIWAYAT --}}
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Filter Riwayat</h3>
+            <h3 class="card-title">Rekapitulasi Kehadiran</h3>
         </div>
-        <div class="card-body">
-            <form method="GET" action="{{ route('attendances.history', $studyClass->id) }}">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label>Dari Tanggal:</label>
-                            <input type="date" name="start_date" class="form-control" value="{{ request('start_date', now()->subMonths(1)->toDateString()) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                         <div class="form-group">
-                            <label>Sampai Tanggal:</label>
-                            <input type="date" name="end_date" class="form-control" value="{{ request('end_date', now()->toDateString()) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- HASIL RIWAYAT --}}
-    @forelse($attendances as $date => $records)
-        <div class="card">
-            <div class="card-header bg-lightblue">
-                <h3 class="card-title"><strong>Tanggal: {{ \Carbon\Carbon::parse($date)->format('d F Y') }}</strong></h3>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover">
+        <div class="card-body table-responsive p-0">
+            @if(count($studentsInClass) > 0 && count($dateColumns) > 0)
+                <table class="table table-bordered table-hover text-nowrap">
                     <thead>
-                        <tr>
-                            <th>Nama Siswa</th>
-                            <th>Status Kehadiran</th>
-                            <th>Catatan</th>
+                        <tr class="text-center">
+                            <th class="text-left align-middle">Nama Siswa</th>
+                            @foreach($dateColumns as $date)
+                                <th>{{ \Carbon\Carbon::parse($date)->format('d/m') }}</th>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($records as $record)
-                        <tr>
-                            <td>{{ $record->student->full_name ?? 'Siswa tidak ditemukan' }}</td>
-                            <td>
-                                 <span class="badge 
-                                    @if($record->status == 'Hadir') badge-success 
-                                    @elseif($record->status == 'Izin') badge-info
-                                    @elseif($record->status == 'Sakit') badge-warning
-                                    @else badge-danger @endif">
-                                    {{ $record->status }}
-                                </span>
-                            </td>
-                            <td>{{ $record->notes ?? '-' }}</td>
-                        </tr>
+                        @foreach($studentsInClass as $student)
+                            <tr>
+                                <td>{{ $student->full_name }}</td>
+                                @foreach($dateColumns as $date)
+                                    @php
+                                        // Buat kunci untuk mencari data presensi
+                                        $key = $student->id . '_' . $date;
+                                        $record = $attendances->get($key);
+
+                                        // Tentukan status dan warna badge
+                                        $status = $record ? $record->status : '-';
+                                        $badgeClass = '';
+                                        switch($status) {
+                                            case 'Hadir': $badgeClass = 'badge-success'; break;
+                                            case 'Izin': $badgeClass = 'badge-info'; break;
+                                            case 'Sakit': $badgeClass = 'badge-warning'; break;
+                                            case 'Alpa': $badgeClass = 'badge-danger'; break;
+                                            default: $badgeClass = 'badge-light text-muted';
+                                        }
+                                    @endphp
+                                    <td class="text-center" title="{{ $status }}">
+                                        {{-- Tampilkan hanya huruf pertama untuk ringkas --}}
+                                        <span class="badge {{ $badgeClass }}">{{ substr($status, 0, 1) }}</span>
+                                    </td>
+                                @endforeach
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+            @else
+                 <div class="alert alert-warning text-center m-3">
+                   Tidak ada data presensi yang tercatat untuk kelas ini.
+               </div>
+            @endif
         </div>
-    @empty
-        <div class="alert alert-warning text-center">
-            Tidak ada data presensi pada rentang tanggal yang dipilih.
-        </div>
-    @endforelse
+    </div>
+    <div class="mt-2">
+        <strong>Keterangan:</strong>
+        <span class="badge badge-success">H</span>: Hadir,
+        <span class="badge badge-info">I</span>: Izin,
+        <span class="badge badge-warning">S</span>: Sakit,
+        <span class="badge badge-danger">A</span>: Alpa
+    </div>
 @stop

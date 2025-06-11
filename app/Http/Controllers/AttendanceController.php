@@ -47,27 +47,30 @@ class AttendanceController extends Controller
         return redirect()->route('study-classes.show', $studyClass->id)
             ->with('success', 'Presensi untuk tanggal ' . $request->attendance_date . ' berhasil disimpan!');
     }
-    /**
-     * Menampilkan halaman riwayat presensi.
-     */
+   
     public function history(Request $request, StudyClass $studyClass)
     {
-        // Eager load relasi untuk efisiensi
-        $studyClass->load('students');
+        // 1. Ambil semua siswa yang terdaftar di kelas ini, urutkan berdasarkan nama
+        $studentsInClass = $studyClass->students()->orderBy('full_name')->get();
 
-        // Ambil data presensi untuk kelas ini
-        $attendancesQuery = Attendance::where('study_class_id', $studyClass->id)
-            ->with('student') // Ambil juga data siswa
-            ->latest('attendance_date'); // Urutkan dari terbaru
+        // 2. Ambil semua data presensi untuk kelas ini
+        //    Gunakan keyBy untuk membuat pencarian data lebih cepat di view
+        $attendances = Attendance::where('study_class_id', $studyClass->id)
+            ->get()
+            ->keyBy(function ($item) {
+                // Buat kunci unik: "studentID_YYYY-MM-DD"
+                return $item->student_id . '_' . $item->attendance_date;
+            });
 
-        // Terapkan filter tanggal jika ada
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $attendancesQuery->whereBetween('attendance_date', [$request->start_date, $request->end_date]);
-        }
+        // 3. Buat kolom tanggal HANYA dari tanggal yang ada di catatan presensi
+        $dateColumns = Attendance::where('study_class_id', $studyClass->id)
+            ->select('attendance_date')
+            ->distinct()
+            ->orderBy('attendance_date', 'asc')
+            ->pluck('attendance_date')
+            ->map(fn($date) => (string) $date); // Pastikan formatnya string
 
-        // Ambil hasilnya dan kelompokkan berdasarkan tanggal
-        $attendances = $attendancesQuery->get()->groupBy('attendance_date');
-
-        return view('attendances.history', compact('studyClass', 'attendances'));
+        // 4. Kirim semua data yang sudah diolah ke view
+        return view('attendances.history', compact('studyClass', 'studentsInClass', 'attendances', 'dateColumns'));
     }
 }

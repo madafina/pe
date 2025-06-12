@@ -134,7 +134,7 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-warning',
     'usermenu_image' => false,
     'usermenu_desc' => false,
@@ -332,9 +332,9 @@ return [
             'icon' => 'fas fa-fw fa-list',
         ],
 
-        // [
-        //     'header' => 'KEUANGAN',
-        // ],
+        [
+            'header' => 'KEUANGAN',
+        ],
 
         [
             'text' => 'Invoice',
@@ -346,16 +346,22 @@ return [
             'route'  => 'payments.index',
             'icon' => 'fas fa-fw fa-history',
         ],
+        [
+            'text' => 'Pengeluaran',
+            'route'  => 'payments.index',
+            'icon' => 'fas fa-fw fa-wallet',
+        ],
 
 
         [
-            'header' => 'MASTER AKADEMIK',
+            'header' => 'AKADEMIK',
         ],
         [
             'text' => 'Data Tutor',
             'route'  => 'tutors.index',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
         ],
+
         [
             'text' => 'Data Mata Pelajaran',
             'route'  => 'subjects.index',
@@ -363,10 +369,33 @@ return [
         ],
 
         [
+            'text' => 'Pengelolaan Harga',
+            'route'  => 'course-prices.index',
+            'icon' => 'fas fa-fw fa-tags',
+        ],
+
+        [
             'text' => 'Manajemen Kelas',
             'route'  => 'study-classes.index',
             'icon' => 'fas fa-fw fa-school',
         ],
+
+        
+        [
+            'header' => 'SETTING',
+        ],
+
+         [
+            'text' => 'Pengguna',
+            'route'  => '',
+            'icon' => 'fas fa-fw fa-users',
+        ],
+         [
+            'text' => 'Kategori Pengeluaran',
+            'route'  => '',
+            'icon' => 'fas fa-fw fa-folder',
+        ],
+
     ],
 
     /*

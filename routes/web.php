@@ -5,11 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Api\CoursePriceController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudyClassController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CoursePriceController;
+use App\Http\Controllers\Api\CoursePriceController as ApiCoursePriceController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
 
     // Route untuk API mengambil harga kursus <-- TAMBAHKAN INI
-    Route::get('/api/course-prices', [CoursePriceController::class, 'index'])->name('api.course-prices');
+    Route::get('/api/course-prices', [ApiCoursePriceController::class, 'index'])->name('api.course-prices');
 
     Route::resource('tutors', TutorController::class);
     Route::resource('subjects', SubjectController::class);
@@ -49,6 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'create'])->name('attendances.create');
     Route::post('/study-classes/{studyClass}/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
     Route::get('/study-classes/{studyClass}/attendances/history', [AttendanceController::class, 'history'])->name('attendances.history');
+
+    Route::resource('course-prices', CoursePriceController::class);
 
 });
 

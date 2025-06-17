@@ -10,6 +10,8 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudyClassController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CoursePriceController;
+use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\Api\CoursePriceController as ApiCoursePriceController;
 
 
@@ -53,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/study-classes/{studyClass}/attendances/history', [AttendanceController::class, 'history'])->name('attendances.history');
 
     Route::resource('course-prices', CoursePriceController::class);
+    Route::resource('expenses', ExpenseController::class);
+    Route::resource('expense-categories', ExpenseCategoryController::class);
 
 });
 

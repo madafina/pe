@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Title
@@ -257,7 +256,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -313,7 +312,7 @@ return [
         // Sidebar items:
         [
             'text' => 'Dashboard',
-            'route'  => 'dashboard',
+            'route' => 'dashboard',
             'icon' => 'fas fa-fw fa-tachometer-alt',
         ],
         // [
@@ -322,80 +321,82 @@ return [
 
         [
             'text' => 'Pendaftaran Siswa',
-            'route'  => 'students.create',
+            'route' => 'students.create',
             'icon' => 'fas fa-fw fa-user-plus',
         ],
 
         [
             'text' => 'Data Siswa',
-            'route'  => 'students.index',
+            'route' => 'students.index',
             'icon' => 'fas fa-fw fa-list',
         ],
 
         [
             'header' => 'KEUANGAN',
-        ],
-
+        ],  
         [
-            'text' => 'Invoice',
-            'route'  => 'invoices.index',
-            'icon' => 'fas fa-fw fa-file-invoice-dollar',
+        'text'    => 'Keuangan',
+        'icon'    => 'fas fa-fw fa-dollar-sign',
+        'submenu' => [
+            [
+                'text' => 'Manajemen Tagihan',
+                'route'  => 'invoices.index',
+                'icon' => 'fas fa-fw fa-file-invoice-dollar',
+            ],
+            [
+                'text' => 'Log Pembayaran',
+                'route'  => 'payments.index',
+                'icon' => 'fas fa-fw fa-history',
+            ],
+            [
+                'text' => 'Log Pengeluaran', // Menu baru
+                'route'  => 'expenses.index',
+                'icon' => 'fas fa-fw fa-receipt',
+            ],
         ],
-        [
-            'text' => 'Semua Pembayaran',
-            'route'  => 'payments.index',
-            'icon' => 'fas fa-fw fa-history',
-        ],
-        [
-            'text' => 'Pengeluaran',
-            'route'  => 'payments.index',
-            'icon' => 'fas fa-fw fa-wallet',
-        ],
-
+    ],
 
         [
             'header' => 'AKADEMIK',
         ],
         [
             'text' => 'Data Tutor',
-            'route'  => 'tutors.index',
+            'route' => 'tutors.index',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
         ],
 
         [
             'text' => 'Data Mata Pelajaran',
-            'route'  => 'subjects.index',
+            'route' => 'subjects.index',
             'icon' => 'fas fa-fw fa-book',
         ],
 
         [
             'text' => 'Pengelolaan Harga',
-            'route'  => 'course-prices.index',
+            'route' => 'course-prices.index',
             'icon' => 'fas fa-fw fa-tags',
         ],
 
         [
             'text' => 'Manajemen Kelas',
-            'route'  => 'study-classes.index',
+            'route' => 'study-classes.index',
             'icon' => 'fas fa-fw fa-school',
         ],
 
-        
         [
             'header' => 'SETTING',
         ],
 
-         [
+        [
             'text' => 'Pengguna',
-            'route'  => '',
+            'route' => '',
             'icon' => 'fas fa-fw fa-users',
         ],
-         [
+        [
             'text' => 'Kategori Pengeluaran',
-            'route'  => '',
-            'icon' => 'fas fa-fw fa-folder',
+            'route' => 'expense-categories.index',
+            'icon' => 'fas fa-fw fa-tags',
         ],
-
     ],
 
     /*
@@ -410,15 +411,7 @@ return [
     |
     */
 
-    'filters' => [
-        JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
-    ],
+    'filters' => [JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class],
 
     /*
     |--------------------------------------------------------------------------

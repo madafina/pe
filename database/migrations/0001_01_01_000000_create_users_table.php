@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('role')->default('finance'); // 'admin' or 'finance' <-- TAMBAHKAN INI
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

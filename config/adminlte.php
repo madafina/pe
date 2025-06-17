@@ -389,7 +389,7 @@ return [
 
         [
             'text' => 'Pengguna',
-            'route' => '',
+            'route' => 'users.index',
             'icon' => 'fas fa-fw fa-users',
         ],
         [

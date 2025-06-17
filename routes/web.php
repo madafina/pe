@@ -12,6 +12,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CoursePriceController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\CoursePriceController as ApiCoursePriceController;
 
 
@@ -57,6 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('course-prices', CoursePriceController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expense-categories', ExpenseCategoryController::class);
+
+    Route::resource('users', UserController::class);
 
 });
 

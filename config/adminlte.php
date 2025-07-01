@@ -109,7 +109,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/logo.png',
@@ -323,79 +323,113 @@ return [
             'text' => 'Pendaftaran Siswa',
             'route' => 'students.create',
             'icon' => 'fas fa-fw fa-user-plus',
+            'can' => 'admin'
         ],
 
         [
             'text' => 'Data Siswa',
             'route' => 'students.index',
             'icon' => 'fas fa-fw fa-list',
+            'can' => 'admin'
         ],
 
         [
             'header' => 'KEUANGAN',
-        ],  
+            'can' => ['admin', 'finance']
+        ],
         [
-        'text'    => 'Keuangan',
-        'icon'    => 'fas fa-fw fa-dollar-sign',
-        'submenu' => [
-            [
-                'text' => 'Manajemen Tagihan',
-                'route'  => 'invoices.index',
-                'icon' => 'fas fa-fw fa-file-invoice-dollar',
-            ],
-            [
-                'text' => 'Log Pembayaran',
-                'route'  => 'payments.index',
-                'icon' => 'fas fa-fw fa-history',
-            ],
-            [
-                'text' => 'Log Pengeluaran', // Menu baru
-                'route'  => 'expenses.index',
-                'icon' => 'fas fa-fw fa-receipt',
+            'text'    => 'Keuangan',
+            'icon'    => 'fas fa-fw fa-dollar-sign',
+            'can' => ['admin', 'finance'],
+            'submenu' => [
+                [
+                    'text' => 'Manajemen Tagihan',
+                    'route'  => 'invoices.index',
+                    'icon' => 'fas fa-fw fa-file-invoice-dollar',
+                    'can' => ['admin', 'finance']
+                ],
+                [
+                    'text' => 'Log Pembayaran',
+                    'route'  => 'payments.index',
+                    'icon' => 'fas fa-fw fa-history',
+                    'can' => ['admin', 'finance']
+                ],
+                [
+                    'text' => 'Log Pengeluaran',
+                    'route'  => 'expenses.index',
+                    'icon' => 'fas fa-fw fa-receipt',
+                    'can' => ['admin', 'finance']
+                ],
+
+                [
+                    'text' => 'Verifikasi Pembayaran',
+                    'route'  => 'admin.payment_verifications.index',
+                    'icon' => 'fas fa-fw fa-check-double',
+                    'can' => ['admin','finance'],
+                ],
+
+
             ],
         ],
-    ],
 
         [
             'header' => 'AKADEMIK',
+            'can' => 'admin',
         ],
         [
             'text' => 'Data Tutor',
             'route' => 'tutors.index',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
+            'can' => 'admin',
         ],
 
         [
             'text' => 'Data Mata Pelajaran',
             'route' => 'subjects.index',
             'icon' => 'fas fa-fw fa-book',
+            'can' => 'admin',
+        ],
+
+
+
+        [
+            'text' => 'Manajemen Kelas',
+            'route' => 'study-classes.index',
+            'icon' => 'fas fa-fw fa-school',
+            'can' => 'admin',
+        ],
+
+        [
+            'header' => 'SETTING',
+            'can' => 'admin'
         ],
 
         [
             'text' => 'Pengelolaan Harga',
             'route' => 'course-prices.index',
             'icon' => 'fas fa-fw fa-tags',
-        ],
-
-        [
-            'text' => 'Manajemen Kelas',
-            'route' => 'study-classes.index',
-            'icon' => 'fas fa-fw fa-school',
-        ],
-
-        [
-            'header' => 'SETTING',
+            'can' => 'admin',
         ],
 
         [
             'text' => 'Pengguna',
             'route' => 'users.index',
             'icon' => 'fas fa-fw fa-users',
+            'can' => 'admin',
         ],
         [
             'text' => 'Kategori Pengeluaran',
             'route' => 'expense-categories.index',
             'icon' => 'fas fa-fw fa-tags',
+            'can' => ['admin', 'finance']
+        ],
+
+
+        [
+            'text' => 'Tagihan Saya',
+            'route'  => 'student.invoices',
+            'icon' => 'fas fa-fw fa-file-invoice-dollar',
+            'can' => 'student',
         ],
     ],
 
@@ -411,7 +445,15 @@ return [
     |
     */
 
-    'filters' => [JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class, JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class],
+    'filters' => [
+        JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -55,6 +55,43 @@
             @enderror
         </div>
 
+        {{-- Parent Phone Number field --}}
+        <div class="input-group mb-3">
+            <input type="text" name="parent_phone_number"
+                class="form-control @error('parent_phone_number') is-invalid @enderror"
+                value="{{ old('parent_phone_number') }}" placeholder="No. HP Orang Tua" required>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-mobile-alt"></span>
+                </div>
+            </div>
+            @error('parent_phone_number')
+                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+            @enderror
+        </div>
+
+        {{-- Education Level field --}}
+        <div class="input-group mb-3">
+            <select name="education_level" class="form-control @error('education_level') is-invalid @enderror" required>
+                <option value="" disabled selected>-- Pilih Tingkat Pendidikan --</option>
+                <option value="Pra-Sekolah" {{ old('education_level') == 'Pra-Sekolah' ? 'selected' : '' }}>Pra-Sekolah
+                    (untuk Calistung)</option>
+                <option value="SD" {{ old('education_level') == 'SD' ? 'selected' : '' }}>SD</option>
+                <option value="SMP" {{ old('education_level') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                <option value="SMA" {{ old('education_level') == 'SMA' ? 'selected' : '' }}>SMA</option>
+                <option value="Lulus/Umum" {{ old('education_level') == 'Lulus/Umum' ? 'selected' : '' }}>Lulus / Umum
+                    (untuk UTBK)</option>
+            </select>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-graduation-cap"></span>
+                </div>
+            </div>
+            @error('education_level')
+                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+            @enderror
+        </div>
+
         {{-- Password field --}}
         <div class="input-group mb-3">
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"

@@ -10,8 +10,14 @@ class Invoice extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function registration() { return $this->belongsTo(Registration::class); }
-    public function payments() { return $this->hasMany(Payment::class); }
+    public function registration()
+    {
+        return $this->belongsTo(Registration::class);
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     // Accessor untuk menghitung total bayar secara otomatis
     public function getTotalPaidAttribute()
@@ -38,5 +44,10 @@ class Invoice extends Model
             return 'Overdue';
         }
         return 'Unpaid';
+    }
+
+    public function paymentSubmissions()
+    {
+        return $this->hasMany(PaymentSubmission::class);
     }
 }

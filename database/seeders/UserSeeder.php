@@ -17,17 +17,15 @@ class UserSeeder extends Seeder
         // Akun Admin
         User::create([
             'name' => 'Admin Penaemas',
-            'email' => 'admin@bimbelpenaemas.id',
-            'password' => Hash::make('rino'),
-            'role' => 'admin',
+            'email' => 'admin@bimbelpenaemas.com',
+            'password' => Hash::make('penaemas'),
         ]);
 
         // Akun Staf Keuangan
         User::create([
             'name' => 'Staf Keuangan',
-            'email' => 'finance@bimbelpenaemas.id',
+            'email' => 'finance@bimbelpenaemas.com',
             'password' => Hash::make('penaemas'),
-            'role' => 'finance',
         ]);
     }
 }

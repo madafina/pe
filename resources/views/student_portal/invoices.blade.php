@@ -85,7 +85,7 @@
                                 <label for="amount">Jumlah Dibayar</label>
                                 <input type="number" name="amount" class="form-control amount-input" required>
                                 <small class="form-text text-muted">
-                                    Min: <span class="min-amount"></span> | Maks: <span class="max-amount"></span>
+                                    Maks: <span class="max-amount"></span>
                                 </small>
                             </div>
                             <div class="form-group"><label>Bukti Pembayaran (JPG/PNG)</label>
@@ -122,9 +122,21 @@
             const targetModalId = button.data('target');
             const modal = $(targetModalId);
 
-            modal.find('.amount-input').attr('min', minAmount).attr('max', remainingAmount);
-            modal.find('.min-amount').text('Rp ' + new Intl.NumberFormat('id-ID').format(minAmount));
+            modal.find('.amount-input').attr('max', remainingAmount);
+            //modal.find('.min-amount').text('Rp ' + new Intl.NumberFormat('id-ID').format(minAmount));
             modal.find('.max-amount').text('Rp ' + new Intl.NumberFormat('id-ID').format(remainingAmount));
         });
     </script>
+
+    <script>
+        // Script untuk menampilkan nama file di input custom file
+        $('.custom-file-input').on('change', function(event) {
+            var inputFile = event.currentTarget;
+            $(inputFile).parent()
+                .find('.custom-file-label')
+                .html(inputFile.files[0].name);
+        });
+    </script>
+
+
 @stop

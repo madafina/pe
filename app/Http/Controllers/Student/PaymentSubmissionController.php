@@ -12,18 +12,18 @@ class PaymentSubmissionController extends Controller
     public function store(Request $request, Invoice $invoice)
     {
         // Hitung nilai minimum (50% dari total tagihan)
-        $minAmount = $invoice->amount * 0.5;
+        // $minAmount = $invoice->amount * 0.5;
         // Ambil sisa tagihan
         $maxAmount = $invoice->remaining_amount;
 
         $request->validate([
             // Terapkan aturan min dan max
-            'amount' => 'required|numeric|min:' . $minAmount . '|max:' . $maxAmount,
+            'amount' => 'required|numeric|max:' . $maxAmount,
             'proof_path' => 'required|image|max:2048',
             'notes' => 'nullable|string',
         ], [
             // Tambahkan pesan error kustom
-            'amount.min' => 'Jumlah pembayaran minimal adalah 50% dari total tagihan.',
+            // 'amount.min' => 'Jumlah pembayaran minimal adalah 50% dari total tagihan.',
             'amount.max' => 'Jumlah pembayaran tidak boleh melebihi sisa tagihan.',
         ]);
 

@@ -114,8 +114,8 @@ class RegisteredUserController extends Controller
                     'due_date' => $coursePrice->payment_deadline,
                 ]);
 
-                // // 5. Kirim Notifikasi WA
-                // (new WhatsAppService())->sendInvoiceNotification($invoice);
+                // 4. Buat Pendaftaran & Invoice jika ada paket
+                $user->notify(new \App\Notifications\WelcomeUserNotification($user, $invoice, $request->password));
             }
 
             // Jika semua berhasil, commit transaksi
@@ -127,7 +127,6 @@ class RegisteredUserController extends Controller
 
             // return redirect(RouteServiceProvider::HOME);
             return redirect(route('dashboard', absolute: false));
-
         } catch (\Exception $e) {
             // Jika ada error, batalkan semua
             DB::rollBack();

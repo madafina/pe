@@ -22,7 +22,7 @@ class PaymentVerificationController extends Controller
     {
         DB::beginTransaction();
         try {
-            // 1. Buat record baru di tabel 'payments'
+            // 1. Buat record pembayaran
             $payment = Payment::create([
                 'invoice_id' => $submission->invoice_id,
                 'amount_paid' => $submission->amount,
@@ -32,32 +32,35 @@ class PaymentVerificationController extends Controller
                 'verified_by_id' => Auth::id(),
             ]);
 
-            // 2. Update status submission menjadi 'approved'
-            $submission->update([
-                'status' => 'approved',
-                'processed_by_id' => Auth::id(),
-            ]);
+            // 2. Update status submission
+            $submission->update(['status' => 'approved', 'processed_by_id' => Auth::id()]);
 
-            // 3. Cek & aktifkan siswa jika ini pembayaran pertama
+            // 3. Aktifkan siswa jika perlu
             $student = $submission->invoice->registration->student;
             if ($student->status == 'Non-Aktif') {
                 $student->status = 'Aktif';
                 $student->save();
             }
 
-            // 4. Cek & update status invoice jika sudah lunas
+            // --- LOGIKA NOTIFIKASI BARU ---
             $invoice = $submission->invoice->fresh();
-            if($invoice->remaining_amount <= 0) {
-                $invoice->status = 'Paid';
-                $invoice->save();
-            }
+            $studentUser = $invoice->registration->student->user;
 
-            // 5. Kirim notifikasi WA ke siswa
-            // (new WhatsAppService())->sendPaymentNotification($payment);
+            if ($studentUser) {
+                // Cek apakah invoice sudah lunas SETELAH pembayaran ini
+                if ($invoice->remaining_amount <= 0 && $invoice->status != 'Paid') {
+                    // Jika LUNAS, kirim notifikasi LUNAS
+                    $invoice->update(['status' => 'Paid']);
+                    $studentUser->notify(new \App\Notifications\InvoicePaidNotification($invoice));
+                } else {
+                    // Jika BELUM LUNAS (cicilan), kirim notifikasi pembayaran diterima
+                    $studentUser->notify(new \App\Notifications\PaymentReceivedNotification($payment));
+                }
+            }
+            // --- SELESAI LOGIKA NOTIFIKASI ---
 
             DB::commit();
             return back()->with('success', 'Pembayaran berhasil diapprove!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -79,4 +82,3 @@ class PaymentVerificationController extends Controller
         return back()->with('success', 'Pengajuan pembayaran berhasil direject!');
     }
 }
-

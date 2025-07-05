@@ -25,10 +25,10 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class, 
             CourseSeeder::class,
             CoursePriceSeeder::class,
-            StudentSeeder::class,
+            //StudentSeeder::class,
             TutorSeeder::class,
-            SubjectSeeder::class,
-            StudyClassSeeder::class,
+            //SubjectSeeder::class,
+            //StudyClassSeeder::class,
             ExpenseCategorySeeder::class,
         ]);
     }

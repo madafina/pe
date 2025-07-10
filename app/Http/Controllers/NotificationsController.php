@@ -35,7 +35,7 @@ class NotificationsController extends Controller
         if ($unreadNotifications->count() === 0) {
             $dropdownHtml = '<span class="dropdown-item dropdown-header">Tidak ada notifikasi baru</span>';
         } else {
-            $dropdownHtml .= '<a href="#" class="dropdown-item dropdown-footer">Tandai semua sudah dibaca</a>';
+            $dropdownHtml .= '<a href="'. route('notifications.markAllAsRead' ) . '" class="dropdown-item dropdown-footer">Tandai semua sudah dibaca</a>';
         }
 
         // 3. Kembalikan data dalam format JSON yang dimengerti AdminLTE

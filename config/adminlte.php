@@ -298,6 +298,19 @@ return [
     */
 
     'menu' => [
+        [
+            'type' => 'navbar-notification',
+            'id' => 'my-notification',
+            'icon' => 'fas fa-bell',
+            'url' => 'notifications/show',
+            'topnav_right' => true,
+            'dropdown_mode' => true,
+            'dropdown_flabel' => 'Semua Notifikasi',
+            'update_cfg' => [
+                'url' => 'notifications/get',
+                'period' => 30,
+            ],
+        ],
         // Navbar items:
         [
             'type' => 'navbar-search',
@@ -434,7 +447,7 @@ return [
             'text' => 'Kelas Saya',
             'route'  => 'student.my_classes',
             'icon' => 'fas fa-fw fa-chalkboard',
-            'role' => 'student',
+            'can' => 'student',
         ],
 
 
@@ -445,6 +458,7 @@ return [
             'can' => 'student', // Hanya tampil untuk role 'student'
             'topnav_user' => true, // Ini menempatkannya di dropdown user pojok kanan atas
         ],
+
     ],
 
     /*

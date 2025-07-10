@@ -4,12 +4,13 @@ namespace App\Notifications;
 
 use App\Channels\WhatsAppChannel; // Import channel custom kita
 use App\Models\Invoice;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Bus\Queueable;
+
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoicePaidNotification extends Notification implements Queueable
+class InvoicePaidNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -62,7 +63,7 @@ class InvoicePaidNotification extends Notification implements Queueable
             'invoice_id' => $this->invoice->id,
             'invoice_number' => $this->invoice->invoice_number,
             'amount' => $this->invoice->amount,
-            'message' => 'Pembayaran untuk invoice ' . $this->invoice->invoice_number . ' telah lunas.\n*' .env('APP_NAME').'*',
+            'message' => 'Pembayaran inv. ' . $this->invoice->invoice_number . ' lunas',
         ];
     }
 

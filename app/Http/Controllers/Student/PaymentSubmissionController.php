@@ -30,13 +30,18 @@ class PaymentSubmissionController extends Controller
 
         $path = $request->file('proof_path')->store('payment_proofs', 'public');
 
-        PaymentSubmission::create([
+        $submission = PaymentSubmission::create([
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
             'amount' => $request->amount,
             'proof_path' => $path,
             'notes' => $request->notes,
         ]);
+
+        // KIRIM NOTIFIKASI KE SEMUA ADMIN
+        $admins = \App\Models\User::role('admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\Admin\NewPaymentSubmissionNotification($submission));
+
 
         return back()->with('success', 'Bukti pembayaran berhasil diunggah dan sedang menunggu verifikasi.');
     }

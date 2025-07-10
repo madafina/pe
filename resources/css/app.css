@@ -1,0 +1,14 @@
+.dropdown-item-form { padding: 0; }
+.dropdown-item-button {
+    display: block;
+    width: 100%;
+    padding: .5rem 1rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+.dropdown-item-button:hover { background-color: #f8f9fa; }

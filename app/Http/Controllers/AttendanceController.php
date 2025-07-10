@@ -6,7 +6,6 @@ use App\Models\StudyClass;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Student;
 
 class AttendanceController extends Controller
 {

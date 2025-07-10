@@ -17,9 +17,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Api\CoursePriceController as ApiCoursePriceController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Student\PaymentSubmissionController;
 use App\Http\Controllers\PublicReceiptController;
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,6 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('notifications/get', [NotificationsController::class, 'getNotificationsData'])->name('notifications.get');
+    // TAMBAHKAN ROUTE-ROUTE INI
+    Route::get('notifications/show', [NotificationsController::class, 'showAll'])->name('notifications.show');
+    Route::post('notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('notifications/mark-all-as-read', [NotificationsController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
 
 Route::middleware('role:admin')->group(function () {
@@ -86,5 +92,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::get('/my-classes', [StudentPortalController::class, 'myClasses'])->name('my_classes');
     Route::get('/my-classes/{studyClass}', [StudentPortalController::class, 'showMyClass'])->name('my_classes.show');
 });
+
+
 
 require __DIR__ . '/auth.php';

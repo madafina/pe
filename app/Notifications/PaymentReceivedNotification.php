@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PaymentReceivedNotification extends Notification
+class PaymentReceivedNotification extends Notification implements ShouldQueue 
 {
     use Queueable;
 
@@ -32,7 +32,7 @@ class PaymentReceivedNotification extends Notification
             'payment_id' => $this->payment->id,
             'invoice_number' => $this->payment->invoice->invoice_number,
             'amount_paid' => $this->payment->amount_paid,
-            'message' => 'Pembayaran sebesar Rp ' . number_format($this->payment->amount_paid) . ' untuk invoice ' . $this->payment->invoice->invoice_number . ' telah kami terima.',
+            'message' => 'Pembayaran Rp ' . number_format($this->payment->amount_paid) . ' diterima.',
         ];
     }
 

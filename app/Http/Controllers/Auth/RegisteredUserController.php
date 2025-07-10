@@ -16,6 +16,9 @@ use App\Models\CoursePrice;
 use App\Models\Registration;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\WelcomeUserNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Admin\NewUserRegisteredNotification;
 
 class RegisteredUserController extends Controller
 {
@@ -27,31 +30,6 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $request->validate([
-    //         'name' => ['required', 'string', 'max:255'],
-    //         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-    //         'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    //     ]);
-
-    //     $user = User::create([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => Hash::make($request->password),
-    //     ]);
-
-    //     event(new Registered($user));
-
-    //     Auth::login($user);
-
-    //     return redirect(route('dashboard', absolute: false));
-    // }
 
     public function store(Request $request): RedirectResponse
     {
@@ -115,7 +93,10 @@ class RegisteredUserController extends Controller
                 ]);
 
                 // 4. Buat Pendaftaran & Invoice jika ada paket
-                $user->notify(new \App\Notifications\WelcomeUserNotification($user, $invoice, $request->password));
+                $user->notify(new WelcomeUserNotification($user, $invoice, $request->password));
+                // KIRIM NOTIFIKASI KE SEMUA ADMIN
+                $admins = User::role('admin')->get();
+                Notification::send($admins, new NewUserRegisteredNotification($user));
             }
 
             // Jika semua berhasil, commit transaksi

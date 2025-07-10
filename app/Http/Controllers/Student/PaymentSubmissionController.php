@@ -25,6 +25,7 @@ class PaymentSubmissionController extends Controller
             // Tambahkan pesan error kustom
             // 'amount.min' => 'Jumlah pembayaran minimal adalah 50% dari total tagihan.',
             'amount.max' => 'Jumlah pembayaran tidak boleh melebihi sisa tagihan.',
+            'proof_path.required' => 'Bukti pembayaran wajib diunggah.',
         ]);
 
         $path = $request->file('proof_path')->store('payment_proofs', 'public');

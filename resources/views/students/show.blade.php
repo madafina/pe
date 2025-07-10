@@ -3,7 +3,7 @@
 @section('title', 'Detail Siswa')
 
 @section('content_header')
-    <h1>Detail Siswa: {{ $student->full_name }}</h1>
+    <h1>Detail Siswa: {{ $student->full_name }} <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm ml-1">Edit</a></h1>
 @stop
 
 @section('content')
@@ -12,12 +12,18 @@
             {{-- KARTU PROFIL SISWA --}}
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                    <h3 class="profile-username text-center">{{ $student->full_name }}</h3>
+                    <h3 class="profile-username text-center">{{ $student->full_name }} </h3>
                     <p class="text-muted text-center">Siswa</p>
 
                     <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
                             <b>No. HP Orang Tua</b> <a class="float-right">{{ $student->parent_phone_number }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Email</b> <a class="float-right">{{ $student->user->email}}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Tingkat</b> <a class="float-right">{{ $student->education_level ?? '-' }}</a>
                         </li>
                         <li class="list-group-item">
                             <b>Sekolah Asal</b> <a class="float-right">{{ $student->school_origin ?? '-' }}</a>
@@ -35,23 +41,17 @@
         <div class="col-md-8">
             {{-- KARTU PROGRAM & KEUANGAN --}}
             <div class="card">
-                <div class="card-header p-2">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#registration" data-toggle="tab">Program &
-                                Keuangan</a></li>
-                    </ul>
-                </div>
+               
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="active tab-pane" id="registration">
                             @if ($student->registration)
                                 <h5><strong>Program yang Diambil</strong></h5>
-                                <p>
-                                    {{ $student->registration->coursePrice->course->name }}
-                                    <br>
-                                    <small>Biaya: Rp
-                                        {{ number_format($student->registration->coursePrice->price, 0, ',', '.') }}</small>
-                                </p>
+                                 <h1 class="badge badge-warning mb-2">
+                                    {{ $student->registration->coursePrice->course->name }}                                    
+                                 </h1>
+                               <p>Biaya: Rp
+                                        {{ number_format($student->registration->coursePrice->price, 0, ',', '.') }}</p>
                                 <hr>
                                 <h5><strong>Riwayat Tagihan (Invoice)</strong></h5>
                                 <table class="table table-bordered">

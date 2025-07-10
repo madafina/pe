@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoicePaidNotification extends Notification
+class InvoicePaidNotification extends Notification implements Queueable
 {
     use Queueable;
 
@@ -46,7 +46,7 @@ class InvoicePaidNotification extends Notification
         return (new MailMessage)
                     ->subject('Konfirmasi Pembayaran Lunas - Invoice ' . $this->invoice->invoice_number)
                     ->greeting('Salam, Bapak/Ibu Wali Murid ' . $notifiable->name . '!')
-                    ->line('Terima kasih. Kami mengonfirmasi bahwa tagihan Anda telah LUNAS.')
+                    ->line('Kami mengonfirmasi bahwa tagihan Anda telah *LUNAS*.')
                     ->line('Detail Tagihan: ' . $this->invoice->description)
                     ->line('Jumlah: Rp ' . $amount)
                     ->action('Lihat Detail Tagihan', url('/student/invoices'))

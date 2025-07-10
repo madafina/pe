@@ -68,9 +68,24 @@
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
     <script>
-        // Script untuk memicu reload datatable saat filter diubah
-        $('#course_filter, #status_filter').on('change', function() {
-            $('#student-table').DataTable().ajax.reload();
-        });
+        // Script untuk notifikasi setelah berhasil
+        @if(session('success'))
+            Swal.fire({
+                type: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+        // Script untuk notifikasi jika gagal
+        @if(session('error'))
+            Swal.fire({
+                type: 'danger',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+            });
+        @endif
     </script>
 @stop

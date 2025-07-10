@@ -9,7 +9,9 @@ use App\Models\Invoice;
 use App\Http\Requests\StoreStudentRequest;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\StudentDataTable;
+use App\Http\Requests\UpdateStudentByAdminRequest;
 use App\Models\Course;
+
 
 class StudentController extends Controller
 {
@@ -77,7 +79,7 @@ class StudentController extends Controller
                 'description' => 'Biaya Pendaftaran Program ' . $coursePrice->course->name,
                 'amount' => $coursePrice->price,
                 'issue_date' => now(),
-                'due_date' => $coursePrice->payment_deadline, 
+                'due_date' => $coursePrice->payment_deadline,
             ]);
 
             DB::commit();
@@ -89,5 +91,48 @@ class StudentController extends Controller
         }
     }
 
-    // ... sisa method lainnya ...
+    public function edit(Student $student)
+    {
+        // Eager load relasi user agar tidak ada query tambahan
+        $student->load('user');
+        return view('students.edit', compact('student'));
+    }
+
+    public function update(UpdateStudentByAdminRequest $request, Student $student)
+    {
+        $validatedData = $request->validated();
+
+        // Update data di tabel students
+        $student->update($validatedData);
+
+        // Update juga data di tabel users jika ada user yang terhubung
+        if ($student->user) {
+            $student->user->update([
+                'name' => $validatedData['full_name'],
+                'email' => $validatedData['email'],
+            ]);
+        }
+
+        return redirect()->route('students.index')->with('success', 'Data siswa berhasil diperbarui!');
+    }
+
+    public function destroy(Student $student)
+    {
+        try {
+            // Ambil user yang terhubung dengan siswa ini
+            $user = $student->user;
+
+            // Hapus data siswa (soft delete)
+            $student->delete();
+
+            // Jika ada user yang terhubung, hapus juga user tersebut (soft delete)
+            if ($user) {
+                $user->delete();
+            }
+
+            return redirect()->route('students.index')->with('success', 'Data siswa dan akun terkait berhasil dipindahkan ke arsip.');
+        } catch (\Exception $e) {
+            return redirect()->route('students.index')->with('error', 'Gagal menghapus data.');
+        }
+    }
 }

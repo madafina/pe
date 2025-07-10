@@ -6,7 +6,6 @@ use App\DataTables\PaymentSubmissionDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\PaymentSubmission;
-use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,18 @@ class PaymentVerificationController extends Controller
 
     public function approve(PaymentSubmission $submission)
     {
+
         DB::beginTransaction();
         try {
+
+            // Kunci baris data ini agar tidak bisa diproses oleh request lain secara bersamaan
+            $submissionToProcess = PaymentSubmission::where('id', $submission->id)->lockForUpdate()->first();
+
+            // Cek ulang status SETELAH dikunci
+            if ($submissionToProcess->status !== 'pending') {
+                DB::rollBack(); // Batalkan transaksi karena tidak ada yang perlu dilakukan
+                return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya!');
+            }
             // 1. Buat record pembayaran
             $payment = Payment::create([
                 'invoice_id' => $submission->invoice_id,

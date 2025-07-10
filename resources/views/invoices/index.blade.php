@@ -59,7 +59,7 @@
                             <label for="proof_of_payment">Unggah Bukti Bayar (Opsional)</label>
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="proof_of_payment"
-                                    name="proof_of_payment">
+                                    name="proof_of_payment" required>
                                 <label class="custom-file-label" for="proof_of_payment">Pilih file...</label>
                             </div>
                         </div>
@@ -130,6 +130,14 @@
         $('#status_filter').on('change', function() {
             // reload 
             $('#invoice-table').DataTable().ajax.reload();
+        });
+
+        // Script untuk menampilkan nama file di input custom file
+        $('.custom-file-input').on('change', function(event) {
+            var inputFile = event.currentTarget;
+            $(inputFile).parent()
+                .find('.custom-file-label')
+                .html(inputFile.files[0].name);
         });
     </script>
 @stop

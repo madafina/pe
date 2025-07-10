@@ -365,7 +365,7 @@ return [
                     'text' => 'Verifikasi Pembayaran',
                     'route'  => 'admin.payment_verifications.index',
                     'icon' => 'fas fa-fw fa-check-double',
-                    'can' => ['admin','finance'],
+                    'can' => ['admin', 'finance'],
                 ],
 
 
@@ -424,12 +424,26 @@ return [
             'can' => ['admin', 'finance']
         ],
 
-
         [
             'text' => 'Tagihan Saya',
             'route'  => 'student.invoices',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
             'can' => 'student',
+        ],
+        [
+            'text' => 'Kelas Saya',
+            'route'  => 'student.my_classes',
+            'icon' => 'fas fa-fw fa-chalkboard',
+            'role' => 'student',
+        ],
+
+
+        [
+            'text' => 'Profil Saya',
+            'route'  => 'student.profile.edit', // Mengarah ke route profil siswa
+            'icon' => 'fas fa-fw fa-user-edit',
+            'can' => 'student', // Hanya tampil untuk role 'student'
+            'topnav_user' => true, // Ini menempatkannya di dropdown user pojok kanan atas
         ],
     ],
 
@@ -519,7 +533,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],

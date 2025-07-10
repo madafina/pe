@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class PaymentDataTable extends DataTable
+class TrashedPaymentDataTable extends DataTable
 {
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
@@ -27,18 +27,19 @@ class PaymentDataTable extends DataTable
             })
             ->editColumn('payment_date', fn($row) => \Carbon\Carbon::parse($row->payment_date)->format('d M Y'))
             ->editColumn('amount_paid', fn($row) => 'Rp ' . number_format($row->amount_paid, 0, ',', '.'))
-            ->addColumn('action', function ($row) {
-                return '<button class="btn btn-danger btn-sm delete-btn" data-id="' . $row->id . '">Hapus</button>';
+           ->addColumn('action', function($row){
+                // Form untuk Restore
+                $restoreForm = '<form action="'.route('payments.restore', $row->id).'" method="POST" class="d-inline">'.csrf_field().method_field('PUT').'<button type="submit" class="btn btn-success btn-sm">Restore</button></form>';
+                return $restoreForm;
             })
-            ->rawColumns(['proof', 'action']);
+            ->editColumn('deleted_at', fn($row) => $row->deleted_at->format('d M Y, H:i'))
+            ->rawColumns(['action','proof']);
     }
 
-    public function query(Payment $model): QueryBuilder
+     public function query(Payment $model): QueryBuilder
     {
-        // Eager load semua relasi yang dibutuhkan untuk performa
-        return $model->newQuery()
-            ->with(['invoice.registration.student', 'verifier'])
-            ->orderBy('id', 'desc');
+        // Menggunakan onlyTrashed() untuk mengambil data dari 'tong sampah'
+        return $model->newQuery()->onlyTrashed()->with(['invoice.registration.student', 'verifier']);
     }
 
     public function html(): HtmlBuilder
@@ -62,7 +63,8 @@ class PaymentDataTable extends DataTable
             Column::make('amount_paid')->title('Jumlah Dibayar'),
             Column::make('verifier')->title('Diverifikasi Oleh')->name('verifier.name'),
             Column::make('proof')->title('Bukti Bayar')->orderable(false)->searchable(false),
-            Column::computed('action')->width(60)->addClass('text-center'),
+            Column::make('deleted_at')->title('Dihapus Pada'),
+            Column::computed('action')->width(80)->addClass('text-center'),
         ];
     }
 

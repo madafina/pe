@@ -43,9 +43,9 @@ class PaymentReceivedNotification extends Notification
         $paymentDate = \Carbon\Carbon::parse($this->payment->payment_date)->format('d F Y');
 
         return "Yth. Bpk/Ibu Wali dari {$studentName},\n\n" .
-               "Terima kasih, kami telah menerima pembayaran Anda dengan rincian:\n" .
+               "Kami telah menerima pembayaran Anda dengan rincian:\n" .
                "Jumlah: *Rp {$amountPaid}*\n" .
                "Tanggal Bayar: *{$paymentDate}*\n\n" .
-               "Pembayaran Anda telah kami catat. Terima kasih atas kerja samanya.\n*SIMBIMBEL*";
+               "Pembayaran Anda telah kami catat. Terima kasih atas kerja samanya.\n *". env('APP_NAME') ."*";
     }
 }

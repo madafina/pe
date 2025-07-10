@@ -7,11 +7,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Cek jika user punya role admin atau finance
-        if (Auth::user()->hasAnyRole(['admin', 'finance'])) {
-            return view('dashboard'); // Arahkan ke dasbor admin
+        $user = Auth::user();
+
+        // Jika user punya role admin atau finance, arahkan ke dasbor admin
+        if ($user->hasAnyRole(['admin', 'finance'])) {
+            return view('dashboard');
         }
-       
-        return view('dashboard-siswa'); // Arahkan ke dasbor admin
+
+        // Jika user punya role student, arahkan ke dasbor siswa
+        if ($user->hasRole('student')) {
+            // Eager load relasi student untuk ditampilkan di view
+            $user->load('student');
+            return view('dashboard-siswa', compact('user'));
+        }
+
     }
 }

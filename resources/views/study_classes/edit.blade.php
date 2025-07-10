@@ -14,7 +14,8 @@
                     <label for="name">Nama Kelas</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name', $studyClass->name) }}" required>
                 </div>
-                <div class="row">
+                {{-- PERBAIKAN STRUKTUR HTML DI SINI --}}
+                <div class="row"> 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mata Pelajaran</label>
@@ -54,13 +55,13 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Jam Mulai:</label>
-                            <input type="time" name="start_time" class="form-control" value="{{ old('start_time', $studyClass->start_time) }}" required>
+                            <input type="time" name="start_time" class="form-control" value="{{ old('start_time', \Carbon\Carbon::parse($studyClass->start_time)->format('H:i')) }}" required>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Jam Selesai:</label>
-                            <input type="time" name="end_time" class="form-control" value="{{ old('end_time', $studyClass->end_time) }}" required>
+                            <input type="time" name="end_time" class="form-control" value="{{ old('end_time', \Carbon\Carbon::parse($studyClass->end_time)->format('H:i')) }}" required>
                         </div>
                     </div>
                 </div>

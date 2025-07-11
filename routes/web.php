@@ -71,7 +71,13 @@ Route::middleware('role:finance|admin')->group(function () {
     Route::resource('students', StudentController::class);
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::post('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify');
-    Route::resource('payments', PaymentController::class)->except(['show', 'edit', 'update']);
+    
+    
+    Route::post('/payments/{invoice}', [PaymentController::class, 'store'])->name('payments.store');
+    Route::resource('payments', PaymentController::class)->only([
+        'index',
+        'destroy'
+    ]);
 
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expense-categories', ExpenseCategoryController::class);

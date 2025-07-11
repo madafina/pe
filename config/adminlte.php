@@ -332,12 +332,12 @@ return [
         //     'header' => 'MANAJEMEN SISWA',
         // ],
 
-        [
-            'text' => 'Pendaftaran Siswa',
-            'route' => 'students.create',
-            'icon' => 'fas fa-fw fa-user-plus',
-            'can' => 'admin'
-        ],
+        // [
+        //     'text' => 'Pendaftaran Siswa',
+        //     'route' => 'students.create',
+        //     'icon' => 'fas fa-fw fa-user-plus',
+        //     'can' => 'admin'
+        // ],
 
         [
             'text' => 'Data Siswa',

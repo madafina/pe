@@ -27,7 +27,7 @@ class InvoiceDataTable extends DataTable
                 return '<span class="text-muted">Lunas</span>';
             })
             ->addColumn('student_name', function ($row) {
-                return $row->registration->student->full_name;
+                return $row->registration->student->name;
             })
             ->editColumn('amount', function ($row) {
                 $sisa = ' (Sisa: Rp ' . number_format($row->remaining_amount, 0, ',', '.') . ')';

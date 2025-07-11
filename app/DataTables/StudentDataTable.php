@@ -23,13 +23,13 @@ class StudentDataTable extends DataTable
                 $detailBtn = '<a href="' . route('students.show', $row->id) . '" class="btn btn-info btn-sm">Detail</a>';
                  $editBtn = '<a href="'.route('students.edit', $row->id).'" class="btn btn-warning btn-sm ml-1">Edit</a>';
                 // Ubah tombol hapus menjadi form
-                $deleteForm = ($row->status ==='Non-Aktif') ? '
-                    <form action="' . route('students.destroy', $row->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'Anda yakin ingin memindahkan data ini ke arsip?\');">
+                $deleteForm = 
+                    '<form action="' . route('students.destroy', $row->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'Anda yakin ingin memindahkan data ini ke arsip?\');">
                         ' . csrf_field() . '
                         ' . method_field('DELETE') . '
                         <button type="submit" class="btn btn-danger btn-sm ml-1">Hapus</button>
                     </form>
-                ': '';
+                ';
 
                 return $detailBtn . ' ' . $editBtn . ' ' . $deleteForm;
             })

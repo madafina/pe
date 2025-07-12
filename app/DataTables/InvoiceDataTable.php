@@ -53,7 +53,13 @@ class InvoiceDataTable extends DataTable
      */
     public function query(Invoice $model): QueryBuilder
     {
-        $query = $model->newQuery()->with('registration.student', 'payments')->withSum('payments', 'amount_paid');
+        // Kita tambahkan withSum untuk bisa menghitung total pembayaran
+        $query = $model->newQuery()
+            ->with('registration.student', 'payments')
+            ->withSum('payments', 'amount_paid')
+            // PERBAIKAN DI SINI:
+            // Hanya ambil invoice jika relasi siswanya ada (tidak di-soft delete)
+            ->whereHas('registration.student');
 
         // Terapkan filter berdasarkan status yang dipilih
         if ($status = $this->request()->get('status')) {
@@ -69,7 +75,7 @@ class InvoiceDataTable extends DataTable
         }
 
         return $query;
-    }
+    }ß
 
 
     /**

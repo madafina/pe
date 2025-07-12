@@ -38,6 +38,9 @@ class PaymentDataTable extends DataTable
         // Eager load semua relasi yang dibutuhkan untuk performa
         return $model->newQuery()
             ->with(['invoice.registration.student', 'verifier'])
+            // PERBAIKAN DI SINI:
+            // Hanya ambil pembayaran jika relasi siswanya ada (tidak di-soft delete)
+            ->whereHas('invoice.registration.student')
             ->orderBy('id', 'desc');
     }
 

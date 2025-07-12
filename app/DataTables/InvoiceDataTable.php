@@ -75,7 +75,7 @@ class InvoiceDataTable extends DataTable
         }
 
         return $query;
-    }ß
+    }
 
 
     /**

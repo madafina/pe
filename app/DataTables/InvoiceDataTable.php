@@ -16,7 +16,6 @@ class InvoiceDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-
             ->addColumn('action', function ($row) {
                 if (strtolower($row->getCalculatedStatusAttribute()) != 'paid') {
                     return '<a href="javascript:void(0)" 
@@ -27,17 +26,16 @@ class InvoiceDataTable extends DataTable
                 return '<span class="text-muted">Lunas</span>';
             })
             ->addColumn('student_name', function ($row) {
-                return $row->registration->student->name;
+                // Tambahkan null-safe check untuk keamanan
+                return $row->registration->student->full_name ?? 'Siswa Dihapus';
             })
             ->editColumn('amount', function ($row) {
                 $sisa = ' (Sisa: Rp ' . number_format($row->remaining_amount, 0, ',', '.') . ')';
                 return 'Rp ' . number_format($row->amount, 0, ',', '.') . '<br><small class="text-danger font-italic">' . $sisa . '</small>';
             })
-            ->editColumn('due_date', function ($row) {
-                return \Carbon\Carbon::parse($row->due_date)->format('d M Y');
-            })
+            ->editColumn('due_date', fn($row) => \Carbon\Carbon::parse($row->due_date)->format('d M Y'))
             ->editColumn('status', function ($row) {
-                $status = $row->getCalculatedStatusAttribute(); // Gunakan status dinamis
+                $status = $row->getCalculatedStatusAttribute();
                 $badge_class = 'badge-secondary';
                 if ($status == 'Paid') $badge_class = 'badge-success';
                 if ($status == 'Partially Paid') $badge_class = 'badge-info';
@@ -48,68 +46,40 @@ class InvoiceDataTable extends DataTable
             ->rawColumns(['status', 'action', 'amount']);
     }
 
-    /**
-     * Get the query source of dataTable.
-     */
     public function query(Invoice $model): QueryBuilder
     {
-        // Kita tambahkan withSum untuk bisa menghitung total pembayaran
-        $query = $model->newQuery()
-            ->with('registration.student', 'payments')
-            ->withSum('payments', 'amount_paid')
-            // PERBAIKAN DI SINI:
-            // Hanya ambil invoice jika relasi siswanya ada (tidak di-soft delete)
-            ->whereHas('registration.student');
-
-        // Terapkan filter berdasarkan status yang dipilih
-        if ($status = $this->request()->get('status')) {
-            if ($status == 'Paid') {
-                $query->where('status', 'Paid');
-            } elseif ($status == 'Partially Paid') {
-                $query->where('status', '!=', 'Paid')->whereHas('payments');
-            } elseif ($status == 'Unpaid') {
-                $query->where('status', '!=', 'Paid')->whereDoesntHave('payments');
-            } elseif ($status == 'Overdue') {
-                $query->where('status', '!=', 'Paid')->where('due_date', '<', now()->toDateString());
-            }
-        }
-
-        return $query;
+        return $model->newQuery()
+                     ->with('registration.student', 'payments')
+                     ->withSum('payments', 'amount_paid')
+                     ->whereHas('registration.student');
     }
 
-
-    /**
-     * Optional method if you want to use the html builder.
-     */
     public function html(): HtmlBuilder
     {
         return $this->builder()
             ->setTableId('invoice-table')
             ->columns($this->getColumns())
-            // ->minifiedAjax() // Kita hapus ini untuk kontrol penuh
             ->ajax([
-                'url' => route('invoices.index'), // Tentukan URL secara eksplisit
+                'url' => route('invoices.index'),
                 'type' => 'GET',
                 'data' => "function(d) {
-                        d.status = $('#status_filter').val();
-                        // Tambahkan parameter acak untuk mencegah caching
-                        d._ = new Date().getTime();
-                    }"
+                    d.status = $('#status_filter').val();
+                    d._ = new Date().getTime();
+                }"
             ])
             ->dom('Bfrtip')
             ->orderBy(1)
             ->buttons([Button::make('excel'), Button::make('reload')]);
     }
 
-    /**
-     * Get the dataTable columns definition.
-     */
     public function getColumns(): array
     {
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('invoice_number')->title('No. Invoice'),
-            Column::make('student_name')->title('Nama Siswa'),
+            // PERBAIKAN DI SINI:
+            // Kita buat kolom ini sebagai 'computed' agar tidak bentrok
+            Column::computed('student_name')->title('Nama Siswa'),
             Column::computed('amount')->title('Jumlah Tagihan'),
             Column::make('due_date')->title('Jatuh Tempo'),
             Column::make('status')->title('Status'),
@@ -117,9 +87,6 @@ class InvoiceDataTable extends DataTable
         ];
     }
 
-    /**
-     * Get the filename for export.
-     */
     protected function filename(): string
     {
         return 'Invoice_' . date('YmdHis');

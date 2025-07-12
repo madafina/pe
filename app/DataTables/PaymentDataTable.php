@@ -16,9 +16,9 @@ class PaymentDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->addColumn('invoice', fn($row) => $row->invoice->invoice_number)
-            ->addColumn('student', fn($row) => $row->invoice->registration->student->full_name)
-            ->addColumn('verifier', fn($row) => $row->verifier->name)
+            ->addColumn('invoice', fn($row) => $row->invoice->invoice_number ?? 'N/A')
+            ->addColumn('student', fn($row) => $row->invoice->registration->student->full_name ?? 'Siswa Dihapus')
+            ->addColumn('verifier', fn($row) => $row->verifier->name ?? 'N/A')
             ->addColumn('proof', function ($row) {
                 if ($row->proof_of_payment) {
                     return '<a href="' . asset('storage/' . $row->proof_of_payment) . '" target="_blank" class="btn btn-xs btn-info">Lihat Bukti</a>';
@@ -35,13 +35,10 @@ class PaymentDataTable extends DataTable
 
     public function query(Payment $model): QueryBuilder
     {
-        // Eager load semua relasi yang dibutuhkan untuk performa
         return $model->newQuery()
-            ->with(['invoice.registration.student', 'verifier'])
-            // PERBAIKAN DI SINI:
-            // Hanya ambil pembayaran jika relasi siswanya ada (tidak di-soft delete)
-            ->whereHas('invoice.registration.student')
-            ->orderBy('id', 'desc');
+                    ->with(['invoice.registration.student', 'verifier'])
+                    ->whereHas('invoice.registration.student')
+                    ->orderBy('id', 'desc');
     }
 
     public function html(): HtmlBuilder
@@ -51,7 +48,6 @@ class PaymentDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
-            // ->orderBy(1, 'desc') // Urutkan dari pembayaran terbaru
             ->buttons([Button::make('excel'), Button::make('reload')]);
     }
 
@@ -60,10 +56,13 @@ class PaymentDataTable extends DataTable
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('payment_date')->title('Tgl. Bayar'),
-            Column::make('invoice')->title('No. Invoice')->name('invoice.invoice_number'),
-            Column::make('student')->title('Nama Siswa')->name('invoice.registration.student.full_name'),
+            Column::make('invoice')->title('No. Invoice'),
+            // PERBAIKAN DI SINI:
+            // Kita buat kolom ini sebagai 'computed' dan tidak bisa di-sort/search
+            // untuk menghindari konflik.
+            Column::computed('student')->title('Nama Siswa'),
             Column::make('amount_paid')->title('Jumlah Dibayar'),
-            Column::make('verifier')->title('Diverifikasi Oleh')->name('verifier.name'),
+            Column::make('verifier')->title('Diverifikasi Oleh'),
             Column::make('proof')->title('Bukti Bayar')->orderable(false)->searchable(false),
             Column::computed('action')->width(60)->addClass('text-center'),
         ];

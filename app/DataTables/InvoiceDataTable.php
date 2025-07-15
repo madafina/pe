@@ -16,14 +16,36 @@ class InvoiceDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
+            // ->addColumn('action', function ($row) {
+            //     if (strtolower($row->getCalculatedStatusAttribute()) != 'paid') {
+            //         return '<a href="javascript:void(0)" 
+            //                    data-id="' . $row->id . '"
+            //                    data-remaining="' . $row->remaining_amount . '"
+            //                    class="btn btn-primary btn-sm record-payment-btn">Catat Bayar</a>';
+            //     }
+            //     return '<span class="text-muted">Lunas</span>';
+            // })
             ->addColumn('action', function ($row) {
+                $actionButtons = '';
+
+                // Tombol Catat Bayar
                 if (strtolower($row->getCalculatedStatusAttribute()) != 'paid') {
-                    return '<a href="javascript:void(0)" 
-                               data-id="' . $row->id . '"
-                               data-remaining="' . $row->remaining_amount . '"
-                               class="btn btn-primary btn-sm record-payment-btn">Catat Bayar</a>';
+                    $actionButtons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" data-remaining="' . $row->remaining_amount . '" class="btn btn-primary btn-sm record-payment-btn">Catat Bayar</a>';
+                } else {
+                    $actionButtons .= '<span class="text-muted">Lunas</span>';
                 }
-                return '<span class="text-muted">Lunas</span>';
+
+                // Tombol Kirim Ulang Notifikasi
+                $resendForm = '
+                <form action="' . route('invoices.resendNotification', $row->id) . '" method="POST" class="d-inline ml-1" onsubmit="return confirm(\'Anda yakin ingin mengirim ulang notifikasi tagihan ini?\');">
+                    ' . csrf_field() . '
+                    <button type="submit" class="btn btn-secondary btn-sm" title="Kirim Ulang Notifikasi WA">
+                        <i class="fab fa-whatsapp"></i> Kirim Ulang
+                    </button>
+                </form>
+            ';
+
+                return $actionButtons . $resendForm;
             })
             ->addColumn('student_name', function ($row) {
                 // Tambahkan null-safe check untuk keamanan
@@ -49,9 +71,9 @@ class InvoiceDataTable extends DataTable
     public function query(Invoice $model): QueryBuilder
     {
         return $model->newQuery()
-                     ->with('registration.student', 'payments')
-                     ->withSum('payments', 'amount_paid')
-                     ->whereHas('registration.student');
+            ->with('registration.student', 'payments')
+            ->withSum('payments', 'amount_paid')
+            ->whereHas('registration.student');
     }
 
     public function html(): HtmlBuilder

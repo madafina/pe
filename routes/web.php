@@ -71,7 +71,7 @@ Route::middleware('role:finance|admin')->group(function () {
     Route::resource('students', StudentController::class);
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::post('/invoices/{invoice}/verify', [InvoiceController::class, 'verify'])->name('invoices.verify');
-    
+     Route::post('/invoices/{invoice}/resend-notification', [InvoiceController::class, 'resendNotification'])->name('invoices.resendNotification');
     
     Route::post('/payments/{invoice}', [PaymentController::class, 'store'])->name('payments.store');
     Route::resource('payments', PaymentController::class)->only([

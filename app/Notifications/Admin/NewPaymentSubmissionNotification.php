@@ -2,13 +2,14 @@
 namespace App\Notifications\Admin;
 
 use App\Models\PaymentSubmission;
-use Illuminate\Bus\Queueable;
+// use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewPaymentSubmissionNotification extends Notification implements ShouldQueue 
+class NewPaymentSubmissionNotification extends Notification 
+// implements ShouldQueue 
 {
-    use Queueable;
+    // use Queueable;
     protected $submission;
 
     public function __construct(PaymentSubmission $submission)

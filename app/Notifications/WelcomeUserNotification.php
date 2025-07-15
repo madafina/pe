@@ -5,14 +5,15 @@ namespace App\Notifications;
 use App\Channels\WhatsAppChannel;
 use App\Models\Invoice;
 use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Bus\Queueable;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeUserNotification extends Notification implements ShouldQueue 
+class WelcomeUserNotification extends Notification 
+// implements ShouldQueue 
 {
-    use Queueable;
+    // use Queueable;
 
     protected $user;
     protected $invoice;

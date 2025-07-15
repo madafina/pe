@@ -4,15 +4,16 @@ namespace App\Notifications;
 
 use App\Channels\WhatsAppChannel; // Import channel custom kita
 use App\Models\Invoice;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Bus\Queueable;
+// use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Bus\Queueable;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoicePaidNotification extends Notification implements ShouldQueue
+class InvoicePaidNotification extends Notification 
+//implements ShouldQueue
 {
-    use Queueable;
+    //use Queueable;
 
     protected $invoice;
 

@@ -1,13 +1,14 @@
 <?php
 namespace App\Notifications\Admin;
 use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Bus\Queueable;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NewUserRegisteredNotification extends Notification implements ShouldQueue 
+class NewUserRegisteredNotification extends Notification 
+// implements ShouldQueue 
 {
-    use Queueable;
+    // use Queueable;
     protected $newUser;
 
     public function __construct(User $newUser)

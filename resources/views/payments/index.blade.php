@@ -67,5 +67,23 @@
                 }
             });
         });
+
+        // Script untuk konfirmasi kirim ulang notifikasi
+        $(document).on('submit', '.resend-form', function(e) {
+            e.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Notifikasi pembayaran akan dikirim ulang ke wali siswa.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Kirim Ulang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     </script>
 @stop

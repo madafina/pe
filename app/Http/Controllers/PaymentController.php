@@ -91,4 +91,21 @@ class PaymentController extends Controller
 
         return redirect()->route('payments.trash')->with('success', 'Data pembayaran berhasil dipulihkan.');
     }
+
+    public function resendNotification(Payment $payment)
+    {
+        try {
+            $studentUser = $payment->invoice->registration->student->user;
+
+            if ($studentUser) {
+                // Panggil class notifikasi yang sudah kita buat
+                $studentUser->notify(new PaymentReceivedNotification($payment));
+            }
+
+            return back()->with('success', 'Notifikasi pembayaran untuk ' . $studentUser->name . ' telah berhasil dikirim ulang.');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengirim notifikasi: ' . $e->getMessage());
+        }
+    }
 }

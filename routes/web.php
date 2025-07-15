@@ -83,7 +83,8 @@ Route::middleware('role:finance|admin')->group(function () {
     Route::resource('expense-categories', ExpenseCategoryController::class);
     Route::get('/payment-verifications', [PaymentVerificationController::class, 'index'])->name('admin.payment_verifications.index');
     Route::get('/payments/trash', [PaymentController::class, 'trash'])->name('payments.trash');
-    Route::put('/payments/{id}/restore', [PaymentController::class, 'restore'])->name('payments.restore'); // <-- TAMBAHKAN INI
+    Route::put('/payments/{id}/restore', [PaymentController::class, 'restore'])->name('payments.restore'); 
+    Route::post('/payments/{payment}/resend-notification', [PaymentController::class, 'resendNotification'])->name('payments.resendNotification');
 
     Route::post('/payment-verifications/{submission}/approve', [PaymentVerificationController::class, 'approve'])->name('payment_verifications.approve');
     Route::post('/payment-verifications/{submission}/reject', [PaymentVerificationController::class, 'reject'])->name('payment_verifications.reject');

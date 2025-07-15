@@ -18,7 +18,7 @@ class PaymentDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('invoice', fn($row) => $row->invoice->invoice_number ?? 'N/A')
             ->addColumn('student', fn($row) => $row->invoice->registration->student->full_name ?? 'Siswa Dihapus')
-            ->addColumn('verifier', fn($row) => $row->verifier->name ?? 'N/A')
+            // ->addColumn('verifier', fn($row) => $row->verifier->name ?? 'N/A')
             ->addColumn('proof', function ($row) {
                 if ($row->proof_of_payment) {
                     return '<a href="' . asset('storage/' . $row->proof_of_payment) . '" target="_blank" class="btn btn-xs btn-info">Lihat Bukti</a>';
@@ -27,8 +27,24 @@ class PaymentDataTable extends DataTable
             })
             ->editColumn('payment_date', fn($row) => \Carbon\Carbon::parse($row->payment_date)->format('d M Y'))
             ->editColumn('amount_paid', fn($row) => 'Rp ' . number_format($row->amount_paid, 0, ',', '.'))
+            // ->addColumn('action', function ($row) {
+            //     return '<button class="btn btn-danger btn-sm delete-btn" data-id="' . $row->id . '">Hapus</button>';
+            // })
             ->addColumn('action', function ($row) {
-                return '<button class="btn btn-danger btn-sm delete-btn" data-id="' . $row->id . '">Hapus</button>';
+                // Tombol Hapus yang sudah ada
+                $deleteForm = '<form action="' . route('payments.destroy', $row->id) . '" method="POST" class="d-inline delete-form">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger btn-sm">Hapus</button></form>';
+
+                // Tombol Kirim Ulang Notifikasi
+                $resendForm = '
+                    <form action="' . route('payments.resendNotification', $row->id) . '" method="POST" class="d-inline ml-1 resend-form">
+                        ' . csrf_field() . '
+                        <button type="submit" class="btn btn-secondary btn-sm" title="Kirim Ulang Notifikasi WA">
+                            Resend
+                        </button>
+                    </form>
+                ';
+
+                return $deleteForm . ' ' . $resendForm;
             })
             ->rawColumns(['proof', 'action']);
     }
@@ -36,9 +52,9 @@ class PaymentDataTable extends DataTable
     public function query(Payment $model): QueryBuilder
     {
         return $model->newQuery()
-                    ->with(['invoice.registration.student', 'verifier'])
-                    ->whereHas('invoice.registration.student')
-                    ->orderBy('id', 'desc');
+            ->with(['invoice.registration.student', 'verifier'])
+            ->whereHas('invoice.registration.student')
+            ->orderBy('id', 'desc');
     }
 
     public function html(): HtmlBuilder
@@ -62,7 +78,7 @@ class PaymentDataTable extends DataTable
             // untuk menghindari konflik.
             Column::computed('student')->title('Nama Siswa'),
             Column::make('amount_paid')->title('Jumlah Dibayar'),
-            Column::make('verifier')->title('Diverifikasi Oleh'),
+            // Column::make('verifier')->title('Diverifikasi Oleh'),
             Column::make('proof')->title('Bukti Bayar')->orderable(false)->searchable(false),
             Column::computed('action')->width(60)->addClass('text-center'),
         ];

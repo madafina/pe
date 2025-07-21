@@ -50,10 +50,10 @@ class StudyClassController extends Controller
     public function create()
     {
         // Ambil data untuk dropdown
-        $subjects = Subject::orderBy('name')->get();
+        // $subjects = Subject::orderBy('name')->get();
         $tutors = Tutor::where('is_active', true)->orderBy('name')->get();
 
-        return view('study_classes.create', compact('subjects', 'tutors'));
+        return view('study_classes.create', compact('tutors'));
     }
 
     public function store(StoreStudyClassRequest $request)

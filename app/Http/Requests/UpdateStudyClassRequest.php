@@ -15,7 +15,7 @@ class UpdateStudyClassRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'subject_id' => 'required|exists:subjects,id',
+            // 'subject_id' => 'required|exists:subjects,id',
             'tutor_id' => 'required|exists:tutors,id',
             'day_of_week' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time' => 'required|date_format:H:i',

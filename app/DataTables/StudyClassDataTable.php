@@ -22,7 +22,7 @@ class StudyClassDataTable extends DataTable
                 return $detailBtn . ' ' . $editBtn;
             })
             // Gunakan eager loading untuk menampilkan nama dari relasi
-            ->addColumn('subject', fn($row) => $row->subject->name)
+            // ->addColumn('subject', fn($row) => $row->subject->name)
             ->addColumn('tutor', fn($row) => $row->tutor->name)
             ->editColumn('start_time', fn($row) => \Carbon\Carbon::parse($row->start_time)->format('H:i'))
             ->editColumn('end_time', fn($row) => \Carbon\Carbon::parse($row->end_time)->format('H:i'))
@@ -31,7 +31,7 @@ class StudyClassDataTable extends DataTable
 
     public function query(StudyClass $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['subject', 'tutor']);
+        $query = $model->newQuery()->with(['tutor']);
 
         // Terapkan filter jika ada input dari request
         if ($day = $this->request()->get('day_of_week')) {
@@ -62,7 +62,7 @@ class StudyClassDataTable extends DataTable
         return [
             Column::make('DT_RowIndex')->title('No')->searchable(false)->orderable(false),
             Column::make('name')->title('Nama Kelas'),
-            Column::make('subject')->title('Mata Pelajaran'),
+            // Column::make('subject')->title('Mata Pelajaran'),
             Column::make('tutor')->title('Tutor'),
             Column::make('day_of_week')->title('Hari'),
             Column::make('start_time')->title('Mulai'),

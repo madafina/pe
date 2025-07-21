@@ -13,7 +13,7 @@
                     <input type="text" name="name" class="form-control" placeholder="Contoh: Fisika 11A - Sore" required>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="form-group">
                             <label>Mata Pelajaran</label>
                             <select name="subject_id" class="form-control" required>
@@ -22,8 +22,8 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-6">
+                    </div> --}}
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Tutor Pengajar</label>
                             <select name="tutor_id" class="form-control" required>

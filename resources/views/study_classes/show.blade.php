@@ -6,7 +6,6 @@
     {{-- Header dinamis --}}
     <h1>Detail Kelas: {{ $studyClass->name }}</h1>
     <p>
-        <strong>Mata Pelajaran:</strong> {{ $studyClass->subject->name }} |
         <strong>Tutor:</strong> {{ $studyClass->tutor->name }} |
         <strong>Jadwal:</strong> {{ $studyClass->day_of_week }},
         {{ \Carbon\Carbon::parse($studyClass->start_time)->format('H:i') }} -

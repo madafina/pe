@@ -23,7 +23,7 @@ class StudyClassController extends Controller
     public function show(StudyClass $studyClass)
     {
         // Eager load relasi yang dibutuhkan untuk efisiensi
-        $studyClass->load('students');
+        $studyClass->load('students', 'subject.course');
 
         // 1. Ambil ID program dari kelas yang sedang dilihat
         $classCourseId = $studyClass->subject->course_id;

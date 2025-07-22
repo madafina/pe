@@ -22,30 +22,24 @@ class StudyClassController extends Controller
      */
     public function show(StudyClass $studyClass)
     {
-        // Eager load relasi yang dibutuhkan untuk efisiensi
-        $studyClass->load('students', 'subject.course');
+        // Eager load hanya relasi 'students' yang masih ada
+        $studyClass->load('students');
 
-        // 1. Ambil ID program dari kelas yang sedang dilihat
-        $classCourseId = $studyClass->subject->course_id;
-
-        // 2. Ambil semua siswa yang sudah terdaftar di kelas ini
+        // 1. Ambil semua siswa yang sudah terdaftar di kelas ini
         $enrolledStudents = $studyClass->students;
 
-        // 3. Ambil siswa yang bisa ditambahkan:
-        //    - Statusnya 'Aktif'
-        //    - Terdaftar di program yang SAMA dengan program kelas ini
-        //    - Belum masuk ke kelas ini
+        // 2. Ambil semua siswa AKTIF yang BELUM ada di kelas ini
+        //    Kita tidak lagi memfilter berdasarkan program/mata pelajaran
         $availableStudents = Student::where('status', 'Aktif')
-            ->whereHas('registration.coursePrice.course', function ($query) use ($classCourseId) {
-                $query->where('id', $classCourseId);
-            })
             ->whereDoesntHave('studyClasses', function ($query) use ($studyClass) {
                 $query->where('study_class_id', $studyClass->id);
             })
+            ->orderBy('full_name')
             ->get();
 
         return view('study_classes.show', compact('studyClass', 'enrolledStudents', 'availableStudents'));
     }
+
 
     public function create()
     {
